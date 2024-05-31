@@ -1,21 +1,31 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import IntroView from '@/views/IntroView.vue'
+import ImprintView from '@/views/ImprintView.vue'
+import DataProtectionView from '@/views/DataProtectionView.vue'
+import HelloWorld from '@/components/HelloWorld.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
+      path: '/intro',
+      name: 'intro',
+      component: IntroView
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      path: '/',
+      name: 'feedback',
+      component: HelloWorld
+    },
+    {
+      path: '/imprint',
+      name: 'imprint',
+      component: () => import('@/views/ImprintView.vue')
+    },
+    {
+      path: '/data-protection',
+      name: 'data-protection',
+      component: () => import('@/views/DataProtectionView.vue')
     }
   ]
 })
