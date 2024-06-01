@@ -57,7 +57,7 @@ onMounted(() => {
         <n-layout-header>
           <TheNavigation />
         </n-layout-header>
-        <n-layout-content>
+        <n-layout-content class="full-height">
           <n-message-provider>
             <n-space vertical>
               <n-card centered>
@@ -75,25 +75,40 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.n-layout {
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   max-width: 1024px;
-  margin: auto;
+  margin: 0 auto;
 }
 
-.n-layout-content {
-  padding-bottom: 1rem;
+.layout-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
 
-.n-layout-footer.n-layout-footer--static-positioned {
-  position: fixed;
+.layout-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.layout-footer {
+  position: sticky;
   bottom: 0;
-  left: 0;
-  right: 0;
+  z-index: 100;
 }
 </style>
 
 <!-- Global styles -->
 <style>
+:root {
+  --primary-color: #00aae8ff;
+}
+
 a {
   color: var(--primary-color);
   cursor: pointer;
