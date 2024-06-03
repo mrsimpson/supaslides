@@ -1,10 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import IntroView from '@/views/IntroView.vue'
-import ImprintView from '@/views/ImprintView.vue'
-import DataProtectionView from '@/views/DataProtectionView.vue'
 import HelloWorld from '@/components/HelloWorld.vue'
-import { userSessionStore } from '@/stores/userSession'
+import { useUserSessionStore } from '@/stores/userSession'
 import AccountView from '@/views/ProfileView.vue'
+import PresenterView from '@/views/PresenterView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,9 +28,7 @@ const router = createRouter({
     {
       path: '/presenter',
       name: 'presenter',
-      component: HelloWorld,
-      props: { msg: 'Presenter' },
-      meta: { needsAuth: true }
+      component: PresenterView
     },
     { path: '/me', name: 'me', component: AccountView },
     {
@@ -48,13 +45,13 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const userSession = userSessionStore()
+  const userSession = useUserSessionStore()
 
   if (to?.meta.needsAuth) {
     if (userSession.session) {
       return next()
     } else {
-      return next('/login')
+      return next('/me')
     }
   }
   return next()

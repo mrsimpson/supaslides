@@ -4,7 +4,7 @@ import { NMenu } from 'naive-ui'
 import { RouterLink, useRoute } from 'vue-router'
 import renderIcon from '@/lib/renderIcon'
 import { h, ref, watch } from 'vue'
-import { Home, Chat, User } from '@vicons/carbon'
+import { Home, Chat, User, PresentationFile } from '@vicons/carbon'
 
 const route = useRoute()
 const activeKey = ref<string | undefined>('')
@@ -25,10 +25,24 @@ const menuOptions: MenuOption[] = [
             name: 'intro'
           }
         },
-        { default: () => 'Einführung' }
+        { default: () => 'Intro' }
       ),
     key: 'intro',
     icon: () => h(Home)
+  },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: 'presenter'
+          }
+        },
+        { default: () => 'My Presentations' }
+      ),
+    key: 'presenter',
+    icon: renderIcon(PresentationFile)
   },
   {
     label: () =>

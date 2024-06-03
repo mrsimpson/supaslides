@@ -3,13 +3,13 @@ import { supabase } from '@/lib/supabase'
 import { onMounted, ref, toRefs } from 'vue'
 import Avatar from '@/components/Avatar.vue'
 import router from '@/router'
-import { userSessionStore } from '@/stores/userSession'
+import { useUserSessionStore } from '@/stores/userSession'
 import { NButton, NFormItem, NInput, NForm, NCard } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
 
 const loading = ref(true)
-const { session } = userSessionStore()
+const { session } = useUserSessionStore()
 
 const formRef = ref<FormInst | null>(null)
 const message = useMessage()

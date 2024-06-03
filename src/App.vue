@@ -1,21 +1,20 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue'
-import { supabase } from '@/lib/supabase'
 import type { GlobalTheme, GlobalThemeOverrides } from 'naive-ui'
-import TheNavigation from '@/components/TheNavigation.vue'
-import TheFooter from '@/components/TheFooter.vue'
 import {
-  NThemeEditor,
+  NCard,
   NConfigProvider,
   NLayout,
-  NLayoutHeader,
   NLayoutContent,
   NLayoutFooter,
+  NLayoutHeader,
   NMessageProvider,
   NSpace,
-  NCard
+  NThemeEditor
 } from 'naive-ui'
-import { userSessionStore } from '@/stores/userSession'
+import TheNavigation from '@/components/TheNavigation.vue'
+import TheFooter from '@/components/TheFooter.vue'
+import { useUserSessionStore } from '@/stores/userSession'
 
 // const osThemeRef = useOsTheme()
 //const theme = ref((osThemeRef.value === 'dark' ? darkTheme : null) as GlobalTheme | null)
@@ -36,14 +35,7 @@ const themeOverrides: GlobalThemeOverrides = {
 
 const themeEditorStyle = localStorage.getItem('theme') === 'true' ? {} : { display: 'none' }
 
-// initialize the userSession store
-const userSession = userSessionStore()
-// listen for auth events (e.g. sign in, sign out, refresh)
-// set session based on the auth event
-supabase.auth.onAuthStateChange((event, session) => {
-  console.log(event)
-  userSession.session = session
-})
+useUserSessionStore().initialize()
 </script>
 
 <template>
