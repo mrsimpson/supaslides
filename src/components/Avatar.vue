@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, toRefs, watch } from 'vue'
 import { supabase } from '@/lib/supabase'
+import { NAvatar } from 'naive-ui'
 
-const prop = defineProps<{ path: string; size: string }>()
-const { path, size } = toRefs(prop)
+const prop = defineProps<{ path: string | null }>()
+const { path } = toRefs(prop)
 
 const emit = defineEmits(['upload', 'update:path'])
 const uploading = ref(false)
@@ -60,16 +61,10 @@ watch(path, () => {
 
 <template>
   <div>
-    <img
-      v-if="src"
-      :src="src"
-      alt="Avatar"
-      class="avatar image"
-      :style="{ height: size + 'em', width: size + 'em' }"
-    />
-    <div v-else class="avatar no-image" :style="{ height: size + 'em', width: size + 'em' }" />
+    <NAvatar v-if="src" :src="src" size="large" alt="Avatar" />
+    <NAvatar v-else size="large" alt="Avatar">A</NAvatar>
 
-    <div :style="{ width: size + 'em' }">
+    <div>
       <label class="button primary block" for="single">
         {{ uploading ? 'Uploading ...' : 'Upload' }}
       </label>

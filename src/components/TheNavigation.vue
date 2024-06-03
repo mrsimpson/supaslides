@@ -4,7 +4,7 @@ import { NMenu } from 'naive-ui'
 import { RouterLink, useRoute } from 'vue-router'
 import renderIcon from '@/lib/renderIcon'
 import { h, ref, watch } from 'vue'
-import { Home, Chat } from '@vicons/carbon'
+import { Home, Chat, User } from '@vicons/carbon'
 
 const route = useRoute()
 const activeKey = ref<string | undefined>('')
@@ -43,6 +43,20 @@ const menuOptions: MenuOption[] = [
       ),
     key: 'feedback',
     icon: renderIcon(Chat)
+  },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: 'me'
+          }
+        },
+        { default: () => 'My profile' }
+      ),
+    key: 'me',
+    icon: renderIcon(User)
   }
 ]
 </script>
