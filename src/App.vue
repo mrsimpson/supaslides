@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { GlobalTheme, GlobalThemeOverrides } from 'naive-ui'
+import type { GlobalTheme } from 'naive-ui'
 import {
   NCard,
   NConfigProvider,
@@ -20,18 +20,18 @@ import { useUserSessionStore } from '@/stores/userSession'
 //const theme = ref((osThemeRef.value === 'dark' ? darkTheme : null) as GlobalTheme | null)
 const theme = ref(null as GlobalTheme | null)
 
-const themeOverrides: GlobalThemeOverrides = {
-  common: {
-    fontSize: '16px',
-    primaryColor: '#00AAE8FF',
-    primaryColorHover: '#00BBFFFF',
-    primaryColorPressed: '#0B5976FF',
-    primaryColorSuppl: '#338FB1FF'
-  },
-  Card: {
-    colorEmbedded: 'rgba(213, 245, 255, 1)'
-  }
-}
+// const themeOverrides: GlobalThemeOverrides = {
+//   common: {
+//     fontSize: '16px',
+//     primaryColor: '#00AAE8FF',
+//     primaryColorHover: '#00BBFFFF',
+//     primaryColorPressed: '#0B5976FF',
+//     primaryColorSuppl: '#338FB1FF'
+//   },
+//   Card: {
+//     colorEmbedded: 'rgba(213, 245, 255, 1)'
+//   }
+// }
 
 const themeEditorStyle = localStorage.getItem('theme') === 'true' ? {} : { display: 'none' }
 

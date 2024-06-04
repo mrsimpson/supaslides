@@ -9,6 +9,9 @@ export interface UserSessionState {
 
 export const useUserSessionStore = defineStore('userSessionStore', {
   state: () => ({ session: null, nickname: '' }) as UserSessionState,
+  getters: {
+    isSignedIn: (state) => !!state.session
+  },
   actions: {
     async initialize() {
       // listen for auth events (e.g. sign in, sign out, refresh)

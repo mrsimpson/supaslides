@@ -1,12 +1,18 @@
 <template>
-  <PresentationFactsheet v-if="activePresentation" :presentation="activePresentation" />
+  <NCard v-if="!isSignedIn" bordered title="Present something">
+    <p>Here, you get an overview of your presentations.</p>
+    <p>However, you need to be signed in in order to do that</p>
+    <NButton>
+      <router-link to="/me">Sign In</router-link>
+    </NButton>
+  </NCard>
+  <ThePresenterPage v-else />
 </template>
 <script lang="ts" setup>
-import PresentationFactsheet from '@/components/PresentationFactsheet.vue'
-import { usePresenterStore } from '@/stores/presenter'
 import { storeToRefs } from 'pinia'
+import { NButton, NCard } from 'naive-ui'
+import { useUserSessionStore } from '@/stores/userSession'
+import ThePresenterPage from '@/components/ThePresenterPage.vue'
 
-const presenterStore = usePresenterStore()
-const { isInitialized, activePresentation } = storeToRefs(presenterStore)
-if (!isInitialized.value) presenterStore.initialize()
+const { isSignedIn } = storeToRefs(useUserSessionStore())
 </script>
