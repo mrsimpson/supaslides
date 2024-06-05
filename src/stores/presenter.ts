@@ -3,10 +3,13 @@ import { useUserSessionStore } from '@/stores/userSession'
 import { supabase } from '@/lib/supabase'
 import type { Presentation } from '@/types/entities'
 import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
+import { upsertObjectInArray } from '@/lib/array'
+import type { RemovableRef } from '@vueuse/core'
+import { useStorage } from '@vueuse/core'
 
 export interface PresenterState {
   isInitialized: Boolean
-  currentPresentationId: Presentation['id'] | null
+  currentPresentationId: RemovableRef<Presentation['id']>
   myPresentations: Presentation[]
 }
 
@@ -14,7 +17,7 @@ export const usePresenterStore = defineStore('presenterStore', {
   state: () =>
     ({
       isInitialized: false,
-      currentPresentationId: null,
+      currentPresentationId: useStorage('pinia/presenter/currentPresentationId', 0),
       myPresentations: [] as Presentation[]
     }) as PresenterState,
   getters: {
@@ -38,8 +41,12 @@ export const usePresenterStore = defineStore('presenterStore', {
         this.isInitialized = true
       }
     },
-
-    syncMyPresentations: async function () {
+    async startPresentation(presentationId: Presentation['id']) {
+      const response = await supabase.rpc('presentation_start', { n_presentation: presentationId })
+      this.currentPresentationId = presentationId
+      return response.data
+    },
+    async syncMyPresentations() {
       const { session } = useUserSessionStore()
       if (session?.user.id) {
         const presentations = await supabase
@@ -54,12 +61,10 @@ export const usePresenterStore = defineStore('presenterStore', {
         ) => {
           switch (payload.eventType) {
             case 'INSERT':
-              this.myPresentations = this.myPresentations.concat(payload.new)
+              this.myPresentations = [...this.myPresentations, payload.new]
               break
             case 'UPDATE':
-              this.myPresentations = this.myPresentations
-                .filter((p) => p.id !== payload.old.id)
-                .concat(payload.new)
+              this.myPresentations = upsertObjectInArray(this.myPresentations, payload.new, 'id')
               break
             case 'DELETE':
               this.myPresentations = this.myPresentations = this.myPresentations.filter(

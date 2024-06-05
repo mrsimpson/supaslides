@@ -7,21 +7,17 @@
       <NSpace vertical>
         <NQrCode
           :size="qrCodeZoomed ? 200 : 40"
-          :style="{
-            cursor: 'zoom-in',
-            padding: 0
-          }"
+          :style="{ cursor: 'zoom-in', padding: 0 }"
           :value="getParticipationUrl()"
           @click="toggleQrZoom()"
         />
-        <NButton
-          v-if="qrCodeZoomed"
-          :style="{ width: '100%' }"
-          @click="handleDownloadQRCode(presentation)"
-        >
+        <NButton v-if="qrCodeZoomed" :style="{ width: '100%' }" @click="handleDownloadQRCode()">
           Download
         </NButton>
       </NSpace>
+    </template>
+    <template #action>
+      <NButton @click="handleClickStart()">Start</NButton>
     </template>
   </NThing>
 </template>
@@ -29,8 +25,9 @@
 <script lang="ts" setup>
 import { defineProps, ref } from 'vue'
 import { NButton, NQrCode, NSpace, NThing } from 'naive-ui'
-import type { Presentation } from '@/types/entities.js'
 import slug from '@/lib/slug'
+import type { Presentation } from '@/types/entities'
+import { usePresenterStore } from '@/stores/presenter'
 
 const qrCodeZoomed = ref(false)
 
@@ -41,11 +38,14 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['started'])
+
 const toggleQrZoom = () => {
   qrCodeZoomed.value = !qrCodeZoomed.value
 }
 
-const handleDownloadQRCode = (presentation: Presentation) => {
+const handleDownloadQRCode = () => {
+  const { presentation } = props
   const canvas = document
     .querySelector(`#presentation-${presentation.id} .n-qr-code`)
     ?.querySelector<HTMLCanvasElement>('canvas')
@@ -63,6 +63,10 @@ const handleDownloadQRCode = (presentation: Presentation) => {
   }
 }
 
+const handleClickStart = async () => {
+  await usePresenterStore().startPresentation(props.presentation.id)
+}
+
 const getParticipationUrl = () =>
-  window.location.origin + '/feedback?presentation=' + props.presentation?.id
+  window.location.origin + '/feedback?presentation=' + props.presentation.id
 </script>

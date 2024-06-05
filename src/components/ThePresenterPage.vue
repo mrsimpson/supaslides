@@ -1,21 +1,31 @@
 <template>
-  <PresentationFactsheet v-if="currentPresentation" :presentation="currentPresentation" />
-
-  <NList v-for="(presentation, index) in nonCurrentPresentations" :key="presentation.id">
-    <NListItem>
-      <PresentationFactsheet :presentation="presentation" />
-    </NListItem>
-  </NList>
+  <NSpace vertical>
+    <NCard v-if="currentPresentation" :bordered="false" title="Current presentation">
+      <NCard bordered embedded size="large">
+        <PresentationFactsheet :presentation="currentPresentation" />
+      </NCard>
+    </NCard>
+    <NCard v-if="nonCurrentPresentations?.length" :bordered="false" title="Other presentations">
+      <NList
+        v-for="(presentation, index) in nonCurrentPresentations"
+        :key="presentation.id"
+        :title="presentation.title || 'Untitled presentation'"
+        bordered
+      >
+        <PresentationListItem :presentation="presentation" />
+      </NList>
+    </NCard>
+  </NSpace>
 </template>
 
 <script lang="ts" setup>
 import PresentationFactsheet from '@/components/PresentationFactsheet.vue'
-import { NList, NListItem } from 'naive-ui'
+import { NCard, NList, NSpace } from 'naive-ui'
 import { usePresenterStore } from '@/stores/presenter'
 import { storeToRefs } from 'pinia'
 import { watch } from 'vue'
-
 import { useUserSessionStore } from '@/stores/userSession'
+import PresentationListItem from '@/components/PresentationListItem.vue'
 
 const { isSignedIn } = storeToRefs(useUserSessionStore())
 let presenterStore = usePresenterStore()
