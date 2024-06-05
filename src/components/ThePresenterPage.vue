@@ -9,7 +9,6 @@
       <NList
         v-for="(presentation, index) in nonCurrentPresentations"
         :key="presentation.id"
-        :title="presentation.title || 'Untitled presentation'"
         bordered
       >
         <PresentationListItem :presentation="presentation" />

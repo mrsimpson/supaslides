@@ -46,6 +46,11 @@ export const usePresenterStore = defineStore('presenterStore', {
       this.currentPresentationId = presentationId
       return response.data
     },
+    async stopPresentation(presentationId: Presentation['id']) {
+      const response = await supabase.rpc('presentation_stop', { n_presentation: presentationId })
+      this.currentPresentationId = presentationId
+      return response.data
+    },
     async syncMyPresentations() {
       const { session } = useUserSessionStore()
       if (session?.user.id) {

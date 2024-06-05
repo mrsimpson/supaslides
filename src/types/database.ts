@@ -79,19 +79,25 @@ export type Database = {
       presentations: {
         Row: {
           created_at: string
+          description: string | null
           id: number
+          lc_status: Database["public"]["Enums"]["presentation_lifecycle_status"]
           presenter: string
           title: string | null
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id?: number
+          lc_status?: Database["public"]["Enums"]["presentation_lifecycle_status"]
           presenter?: string
           title?: string | null
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: number
+          lc_status?: Database["public"]["Enums"]["presentation_lifecycle_status"]
           presenter?: string
           title?: string | null
         }
@@ -151,6 +157,12 @@ export type Database = {
         }
         Returns: Database["public"]["CompositeTypes"]["generic_acknowledgement_type"]
       }
+      presentation_stop: {
+        Args: {
+          n_presentation: number
+        }
+        Returns: Database["public"]["CompositeTypes"]["generic_acknowledgement_type"]
+      }
     }
     Enums: {
       event_type:
@@ -159,6 +171,11 @@ export type Database = {
         | "reaction"
         | "comment"
         | "slide_change"
+      presentation_lifecycle_status:
+        | "prepared"
+        | "started"
+        | "stopped"
+        | "archived"
     }
     CompositeTypes: {
       generic_acknowledgement_type: {
@@ -556,3 +573,4 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never
+

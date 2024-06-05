@@ -11,20 +11,28 @@
           :value="getParticipationUrl()"
           @click="toggleQrZoom()"
         />
+
         <NButton v-if="qrCodeZoomed" :style="{ width: '100%' }" @click="handleDownloadQRCode()">
           Download
         </NButton>
       </NSpace>
     </template>
     <template #action>
-      <NButton @click="handleClickStart()">Start</NButton>
+      <NButtonGroup>
+        <NButton :disabled="presentation.lc_status === 'started'" @click="handleClickStart()"
+          >{{ presentation.lc_status === 'started' ? 'Started' : 'Start' }}
+        </NButton>
+        <NButton :disabled="presentation.lc_status !== 'started'" @click="handleClickStop()"
+          >Stop
+        </NButton>
+      </NButtonGroup>
     </template>
   </NThing>
 </template>
 
 <script lang="ts" setup>
 import { defineProps, ref } from 'vue'
-import { NButton, NQrCode, NSpace, NThing } from 'naive-ui'
+import { NButton, NButtonGroup, NQrCode, NSpace, NThing } from 'naive-ui'
 import slug from '@/lib/slug'
 import type { Presentation } from '@/types/entities'
 import { usePresenterStore } from '@/stores/presenter'
@@ -65,6 +73,10 @@ const handleDownloadQRCode = () => {
 
 const handleClickStart = async () => {
   await usePresenterStore().startPresentation(props.presentation.id)
+}
+
+const handleClickStop = async () => {
+  await usePresenterStore().stopPresentation(props.presentation.id)
 }
 
 const getParticipationUrl = () =>
