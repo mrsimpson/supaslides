@@ -1,41 +1,64 @@
 <template>
   <NThing
     :id="'presentation-' + presentation.id"
+    :description="presentation.description || ''"
     :title="presentation?.title || 'untitled presentation'"
   >
-    <template #header-extra>
+    <template #default>
       <NSpace vertical>
         <NQrCode
-          :size="qrCodeZoomed ? 200 : 40"
+          v-if="qrCodeZoomed"
+          :size="300"
           :style="{ cursor: 'zoom-in', padding: 0 }"
           :value="getParticipationUrl()"
           @click="toggleQrZoom()"
         />
-
-        <NButton v-if="qrCodeZoomed" :style="{ width: '100%' }" @click="handleDownloadQRCode()">
-          Download
-        </NButton>
+        <NButton v-if="qrCodeZoomed" @click="handleDownloadQRCode()"> Download</NButton>
       </NSpace>
     </template>
     <template #action>
-      <NButtonGroup>
-        <NButton :disabled="presentation.lc_status === 'started'" @click="handleClickStart()"
-          >{{ presentation.lc_status === 'started' ? 'Started' : 'Start' }}
-        </NButton>
-        <NButton :disabled="presentation.lc_status !== 'started'" @click="handleClickStop()"
-          >Stop
-        </NButton>
-      </NButtonGroup>
+      <NSpace>
+        <NButtonGroup>
+          <NButton
+            :disabled="presentation.lc_status === 'started'"
+            round
+            @click="handleClickStart()"
+          >
+            <template #icon>
+              <NIcon>
+                <Play />
+              </NIcon>
+            </template>
+            {{ presentation.lc_status === 'started' ? 'Started' : 'Start' }}
+          </NButton>
+          <NButton
+            :disabled="presentation.lc_status !== 'started'"
+            round
+            @click="handleClickStop()"
+          >
+            <template #icon>
+              <NIcon>
+                <Stop />
+              </NIcon>
+            </template>
+            Stop
+          </NButton>
+        </NButtonGroup>
+        <NButtonGroup>
+          <NButton round @click="toggleQrZoom()">QR-Code</NButton>
+        </NButtonGroup>
+      </NSpace>
     </template>
   </NThing>
 </template>
 
 <script lang="ts" setup>
 import { defineProps, ref } from 'vue'
-import { NButton, NButtonGroup, NQrCode, NSpace, NThing } from 'naive-ui'
+import { NButton, NButtonGroup, NIcon, NQrCode, NSpace, NThing } from 'naive-ui'
 import slug from '@/lib/slug'
 import type { Presentation } from '@/types/entities'
 import { usePresenterStore } from '@/stores/presenter'
+import { Play, Stop } from '@vicons/carbon'
 
 const qrCodeZoomed = ref(false)
 
