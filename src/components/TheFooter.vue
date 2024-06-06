@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { RouterLink } from 'vue-router'
 import { VirtualPrivateCloud as DataProtectionIcon } from '@vicons/carbon'
 import { NIcon } from 'naive-ui'
@@ -7,12 +7,12 @@ import { NIcon } from 'naive-ui'
 <template>
   <div class="menu-bar">
     <RouterLink :to="{ name: 'imprint' }">
-      <img src="@/assets/ParagraphIcon.svg" alt="paragraph-icon" />
+      <img alt="paragraph-icon" src="@/assets/ParagraphIcon.svg" />
       Impressum
     </RouterLink>
 
     <a href="https://github.com/mrsimpson/slideshow-frontend/" target="_blank">
-      <img src="@/assets/GitHubIcon.svg" alt="github-icon" />
+      <img alt="github-icon" src="@/assets/GitHubIcon.svg" />
       GitHub
     </a>
 
@@ -39,8 +39,7 @@ import { NIcon } from 'naive-ui'
 }
 
 .menu-bar > *:hover {
-  filter: brightness(0) saturate(100%) invert(68%) sepia(45%) saturate(6457%) hue-rotate(163deg)
-    brightness(105%) contrast(103%);
+  filter: brightness(60%) brightness(130%);
   transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

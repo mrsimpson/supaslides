@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { GlobalTheme } from 'naive-ui'
 import {
+  darkTheme,
+  type GlobalTheme,
   NCard,
   NConfigProvider,
   NLayout,
@@ -10,15 +11,15 @@ import {
   NLayoutHeader,
   NMessageProvider,
   NSpace,
-  NThemeEditor
+  NThemeEditor,
+  useOsTheme
 } from 'naive-ui'
 import TheNavigation from '@/components/TheNavigation.vue'
 import TheFooter from '@/components/TheFooter.vue'
 import { useUserSessionStore } from '@/stores/userSession'
 
-// const osThemeRef = useOsTheme()
-//const theme = ref((osThemeRef.value === 'dark' ? darkTheme : null) as GlobalTheme | null)
-const theme = ref(null as GlobalTheme | null)
+const osThemeRef = useOsTheme()
+const theme = ref((osThemeRef.value === 'dark' ? darkTheme : null) as GlobalTheme | null)
 
 // const themeOverrides: GlobalThemeOverrides = {
 //   common: {
@@ -39,7 +40,7 @@ useUserSessionStore().initialize()
 </script>
 
 <template>
-  <n-config-provider :theme="theme" :theme-overrides="themeOverrides">
+  <n-config-provider :theme="theme" :theme-overrides="null">
     <n-theme-editor :style="themeEditorStyle">
       <n-layout>
         <n-layout-header>
@@ -62,46 +63,8 @@ useUserSessionStore().initialize()
   </n-config-provider>
 </template>
 
-<style scoped>
-.layout-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  max-width: 1024px;
-  margin: 0 auto;
-}
-
-.layout-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-}
-
-.layout-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.layout-footer {
-  position: sticky;
-  bottom: 0;
-  z-index: 100;
-}
-</style>
-
 <!-- Global styles -->
 <style>
-:root {
-  --primary-color: #00aae8ff;
-}
-
-a {
-  color: var(--primary-color);
-  cursor: pointer;
-}
-
 a:hover {
   background-color: unset;
 }
