@@ -1,12 +1,10 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { supabase } from '@/lib/supabase'
-import { onMounted, ref, toRefs } from 'vue'
-import Avatar from '@/components/Avatar.vue'
+import { onMounted, ref } from 'vue'
 import router from '@/router'
 import { useUserSessionStore } from '@/stores/userSession'
-import { NButton, NFormItem, NInput, NForm, NCard } from 'naive-ui'
-import { useMessage } from 'naive-ui'
 import type { FormInst } from 'naive-ui'
+import { NButton, NCard, NForm, NFormItem, NInput, useMessage } from 'naive-ui'
 
 const loading = ref(true)
 const { session } = useUserSessionStore()
@@ -20,12 +18,7 @@ const formValue = ref({
 })
 
 const rules = {
-  email: {
-    required: true,
-    message: 'Please enter your email',
-    trigger: ['input']
-  },
-  username: { required: false },
+  username: { required: true, message: 'Please enter a username', trigger: ['input'] },
   website: { required: false },
   avatar_url: { required: false }
 }
@@ -66,6 +59,8 @@ async function getProfile() {
 }
 
 async function updateProfile(e: Event) {
+  e.preventDefault()
+  const valid = await formRef.value?.validate()
   try {
     if (session && session.user) {
       loading.value = true
@@ -86,7 +81,7 @@ async function updateProfile(e: Event) {
     }
   } catch (error) {
     if (error instanceof Error) {
-      alert(error.message)
+      message.error(error.message)
     } else {
       console.error('An unexpected error occurred:', error)
     }
@@ -114,33 +109,31 @@ async function signOut() {
 </script>
 
 <template>
-  <NCard title="Account" :bordered="false">
-    <NForm @submit="updateProfile">
+  <NCard :bordered="false" title="Account">
+    <NForm ref="formRef" :model="formValue" :rules="rules" @submit="updateProfile">
       <!--      <Avatar :path="formValue.avatar_url" @upload="updateProfile" />-->
 
-      <NFormItem>
-        <NInput id="email" label="Email" type="text" :value="session?.user.email" readonly />
+      <NFormItem label="Email">
+        <NInput id="email" :value="session?.user.email" disabled type="text" />
       </NFormItem>
-      <NFormItem>
+      <NFormItem label="Username" path="username">
         <NInput
           id="username"
-          placeholder="Enter your username"
-          label="Username"
-          type="text"
           v-model:value="formValue.username"
+          placeholder="Enter your username"
+          type="text"
         />
       </NFormItem>
-      <NFormItem>
+      <NFormItem label="Website" path="website">
         <NInput
           id="website"
-          placeholder="Enter your website URL"
-          label="Website"
-          type="text"
           v-model:value="formValue.website"
+          placeholder="Enter your website URL"
+          type="text"
         />
       </NFormItem>
       <NFormItem>
-        <NButton @click="updateProfile" :disabled="loading">Update</NButton>
+        <NButton :disabled="loading" @click="updateProfile">Update</NButton>
       </NFormItem>
     </NForm>
 
