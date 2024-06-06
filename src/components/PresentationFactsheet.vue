@@ -25,6 +25,29 @@
             <NButton :style="{ width: '100%' }" @click="handleDownloadQRCode()">Download</NButton>
           </template>
         </NModal>
+
+        <NModal
+          :show="showEmbeddingCode"
+          :style="{ width: '600px' }"
+          preset="card"
+          @close="toggleEmebddingCodeShown"
+        >
+          <template #header
+            >Embed this into your sli.dev presentation "{{ presentation.title }}"
+          </template>
+          <template #default>
+            <pre
+              >{{
+                `
+
+                    # interactive feedback
+              &lt;PresentationWidget :presentationId="${presentation.id}" /&gt;
+
+                                  `
+              }}
+            </pre>
+          </template>
+        </NModal>
       </NSpace>
     </template>
     <template #action>
@@ -56,7 +79,22 @@
           </NButton>
         </NButtonGroup>
         <NButtonGroup>
-          <NButton round @click="toggleQrCodeShown()">QR-Code</NButton>
+          <NButton round @click="toggleQrCodeShown()">
+            <template #icon>
+              <NIcon>
+                <QrCode />
+              </NIcon>
+            </template>
+            QR-Code
+          </NButton>
+          <NButton round @click="toggleEmebddingCodeShown()">
+            <template #icon>
+              <NIcon>
+                <Code />
+              </NIcon>
+            </template>
+            sli.dev Code
+          </NButton>
         </NButtonGroup>
       </NFlex>
     </template>
@@ -69,9 +107,10 @@ import { NButton, NButtonGroup, NFlex, NIcon, NModal, NQrCode, NSpace, NThing } 
 import slug from '@/lib/slug'
 import type { Presentation } from '@/types/entities'
 import { usePresenterStore } from '@/stores/presenter'
-import { Play, Stop } from '@vicons/carbon'
+import { Code, Play, QrCode, Stop } from '@vicons/carbon'
 
 const showQrCode = ref(false)
+const showEmbeddingCode = ref(false)
 
 const props = defineProps({
   presentation: {
@@ -84,6 +123,10 @@ const emit = defineEmits(['started'])
 
 const toggleQrCodeShown = () => {
   showQrCode.value = !showQrCode.value
+}
+
+const toggleEmebddingCodeShown = () => {
+  showEmbeddingCode.value = !showEmbeddingCode.value
 }
 
 const handleDownloadQRCode = () => {

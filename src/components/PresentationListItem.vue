@@ -1,7 +1,7 @@
 <template>
   <NListItem>
     <template #suffix>
-      <NButton secondary size="medium" strong type="primary" @click="setCurrent()">
+      <NButton primary @click="setCurrent()">
         <template #icon>
           <NIcon>
             <CheckmarkOutline />
