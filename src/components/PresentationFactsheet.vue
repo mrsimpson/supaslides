@@ -6,18 +6,29 @@
   >
     <template #default>
       <NSpace vertical>
-        <NQrCode
-          v-if="qrCodeZoomed"
-          :size="300"
-          :style="{ cursor: 'zoom-in', padding: 0 }"
-          :value="getParticipationUrl()"
-          @click="toggleQrZoom()"
-        />
-        <NButton v-if="qrCodeZoomed" @click="handleDownloadQRCode()"> Download</NButton>
+        <NModal
+          :show="showQrCode"
+          :style="{ width: '600px' }"
+          preset="card"
+          @close="toggleQrCodeShown"
+        >
+          <template #header>QR Code to join "{{ presentation.title }}"</template>
+          <template #default>
+            <NQrCode
+              :size="500"
+              :style="{ cursor: 'zoom-in', padding: 0 }"
+              :value="getParticipationUrl()"
+              @click="toggleQrCodeShown()"
+            />
+          </template>
+          <template #footer>
+            <NButton :style="{ width: '100%' }" @click="handleDownloadQRCode()">Download</NButton>
+          </template>
+        </NModal>
       </NSpace>
     </template>
     <template #action>
-      <NSpace>
+      <NFlex justify="space-between">
         <NButtonGroup>
           <NButton
             :disabled="presentation.lc_status === 'started'"
@@ -45,22 +56,22 @@
           </NButton>
         </NButtonGroup>
         <NButtonGroup>
-          <NButton round @click="toggleQrZoom()">QR-Code</NButton>
+          <NButton round @click="toggleQrCodeShown()">QR-Code</NButton>
         </NButtonGroup>
-      </NSpace>
+      </NFlex>
     </template>
   </NThing>
 </template>
 
 <script lang="ts" setup>
 import { defineProps, ref } from 'vue'
-import { NButton, NButtonGroup, NIcon, NQrCode, NSpace, NThing } from 'naive-ui'
+import { NButton, NButtonGroup, NFlex, NIcon, NModal, NQrCode, NSpace, NThing } from 'naive-ui'
 import slug from '@/lib/slug'
 import type { Presentation } from '@/types/entities'
 import { usePresenterStore } from '@/stores/presenter'
 import { Play, Stop } from '@vicons/carbon'
 
-const qrCodeZoomed = ref(false)
+const showQrCode = ref(false)
 
 const props = defineProps({
   presentation: {
@@ -71,8 +82,8 @@ const props = defineProps({
 
 const emit = defineEmits(['started'])
 
-const toggleQrZoom = () => {
-  qrCodeZoomed.value = !qrCodeZoomed.value
+const toggleQrCodeShown = () => {
+  showQrCode.value = !showQrCode.value
 }
 
 const handleDownloadQRCode = () => {
