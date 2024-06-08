@@ -4,6 +4,8 @@ import HelloWorld from '@/components/HelloWorld.vue'
 import { useUserSessionStore } from '@/stores/userSession'
 import AccountView from '@/views/ProfileView.vue'
 import PresenterView from '@/views/PresenterView.vue'
+import JoinView from '@/views/JoinView.vue'
+import FeedbackView from '@/views/FeedbackView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,10 +21,11 @@ const router = createRouter({
       name: 'intro',
       component: IntroView
     },
+    { path: '/join', name: 'join', component: JoinView },
     {
       path: '/feedback',
       name: 'feedback',
-      component: HelloWorld,
+      component: FeedbackView,
       props: { msg: 'Feedback' }
     },
     {

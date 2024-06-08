@@ -157,5 +157,5 @@ const handleClickStop = async () => {
 }
 
 const getParticipationUrl = () =>
-  window.location.origin + '/feedback?presentation=' + props.presentation.id
+  window.location.origin + '/join?code=' + props.presentation?.join_code
 </script>
