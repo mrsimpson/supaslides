@@ -9,7 +9,7 @@ export interface UserSessionState {
   initialized: boolean
   anonUuid: RemovableRef<string>
   session: Session | null
-  displayName: ''
+  displayName: RemovableRef<string>
 }
 
 export const useUserSessionStore = defineStore('userSessionStore', {
@@ -17,7 +17,7 @@ export const useUserSessionStore = defineStore('userSessionStore', {
     ({
       session: null,
       anonUuid: useStorage('pinia/userSession/anonUuid', uuid()),
-      displayName: '',
+      displayName: useStorage('pinia/userSession/displayName', ''),
       initialized: false
     }) as UserSessionState,
   getters: {
@@ -32,6 +32,9 @@ export const useUserSessionStore = defineStore('userSessionStore', {
         this.session = session
       })
       this.initialized = true
+    },
+    setDisplayName(newDisplayName: string) {
+      this.displayName = newDisplayName
     }
   }
 })

@@ -1,14 +1,46 @@
+<template>
+  <n-card :bordered="false" :title="t('account')">
+    <n-form ref="formRef" :model="formValue" :rules="rules" @submit="updateProfile">
+      <!-- <Avatar :path="formValue.avatar_url" @upload="updateProfile" />-->
+      <n-form-item :label="t('email_label')">
+        <NInput id="email" :value="session?.user.email" disabled type="text" />
+      </n-form-item>
+      <n-form-item :label="t('username_label')" path="username">
+        <n-input
+          id="username"
+          v-model:value="formValue.username"
+          placeholder="Enter your username"
+          type="text"
+        />
+      </n-form-item>
+      <n-form-item :label="t('website_label')" path="website">
+        <n-input
+          id="website"
+          v-model:value="formValue.website"
+          placeholder="Enter your website URL"
+          type="text"
+        />
+      </n-form-item>
+      <n-form-item>
+        <n-button :disabled="loading" @click="updateProfile">{{ t('update_button') }}</n-button>
+      </n-form-item>
+    </n-form>
+    <n-form-item>
+      <n-button type="error" @click="signOut">{{ t('sign_out_button') }}</n-button>
+    </n-form-item>
+  </n-card>
+</template>
+
 <script lang="ts" setup>
 import { supabase } from '@/lib/supabase'
 import { onMounted, ref } from 'vue'
 import router from '@/router'
 import { useUserSessionStore } from '@/stores/userSession'
-import type { FormInst } from 'naive-ui'
-import { NButton, NCard, NForm, NFormItem, NInput, useMessage } from 'naive-ui'
+import { type FormInst, useMessage } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 
 const loading = ref(true)
 const { session } = useUserSessionStore()
-
 const formRef = ref<FormInst | null>(null)
 const message = useMessage()
 const formValue = ref({
@@ -17,10 +49,20 @@ const formValue = ref({
   avatar_url: '' as string | null
 })
 
+const { t } = useI18n()
+
 const rules = {
-  username: { required: true, message: 'Please enter a username', trigger: ['input'] },
-  website: { required: false },
-  avatar_url: { required: false }
+  username: {
+    required: true,
+    message: t('please_enter_username_message'),
+    trigger: ['input']
+  },
+  website: {
+    required: false
+  },
+  avatar_url: {
+    required: false
+  }
 }
 
 onMounted(() => {
@@ -31,6 +73,7 @@ async function getProfile() {
   if (!session || !session.user) {
     return
   }
+
   const { user } = session
 
   try {
@@ -60,10 +103,13 @@ async function getProfile() {
 
 async function updateProfile(e: Event) {
   e.preventDefault()
+
   const valid = await formRef.value?.validate()
+
   try {
     if (session && session.user) {
       loading.value = true
+
       const { user } = session
 
       const updates = {
@@ -77,7 +123,8 @@ async function updateProfile(e: Event) {
       const { error } = await supabase.from('profiles').upsert(updates)
 
       if (error) throw error
-      message.success('Profile updated')
+
+      message.success(t('profile_updated_message'))
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -93,8 +140,11 @@ async function updateProfile(e: Event) {
 async function signOut() {
   try {
     loading.value = true
+
     const { error } = await supabase.auth.signOut()
+
     if (error) throw error
+
     router.push('/')
   } catch (error) {
     if (error instanceof Error) {
@@ -107,38 +157,3 @@ async function signOut() {
   }
 }
 </script>
-
-<template>
-  <NCard :bordered="false" title="Account">
-    <NForm ref="formRef" :model="formValue" :rules="rules" @submit="updateProfile">
-      <!--      <Avatar :path="formValue.avatar_url" @upload="updateProfile" />-->
-
-      <NFormItem label="Email">
-        <NInput id="email" :value="session?.user.email" disabled type="text" />
-      </NFormItem>
-      <NFormItem label="Username" path="username">
-        <NInput
-          id="username"
-          v-model:value="formValue.username"
-          placeholder="Enter your username"
-          type="text"
-        />
-      </NFormItem>
-      <NFormItem label="Website" path="website">
-        <NInput
-          id="website"
-          v-model:value="formValue.website"
-          placeholder="Enter your website URL"
-          type="text"
-        />
-      </NFormItem>
-      <NFormItem>
-        <NButton :disabled="loading" @click="updateProfile">Update</NButton>
-      </NFormItem>
-    </NForm>
-
-    <NFormItem>
-      <NButton type="error" @click="signOut">Sign Out</NButton>
-    </NFormItem>
-  </NCard>
-</template>

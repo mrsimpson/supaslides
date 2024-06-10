@@ -4,13 +4,10 @@
       <NCard bordered embedded size="large">
         <PresentationFactsheet :presentation="currentPresentation" />
       </NCard>
+      <PresentationEventsTimeline :events="myPresentationEvents" />
     </NCard>
     <NCard v-if="nonCurrentPresentations?.length" :bordered="false" title="Other presentations">
-      <NList
-        v-for="(presentation, index) in nonCurrentPresentations"
-        :key="presentation.id"
-        bordered
-      >
+      <NList v-for="presentation in nonCurrentPresentations" :key="presentation.id" bordered>
         <PresentationListItem :presentation="presentation" />
       </NList>
     </NCard>
@@ -25,10 +22,11 @@ import { storeToRefs } from 'pinia'
 import { watch } from 'vue'
 import { useUserSessionStore } from '@/stores/userSession'
 import PresentationListItem from '@/components/PresentationListItem.vue'
+import PresentationEventsTimeline from '@/components/PresentationEventsTimeline.vue'
 
 const { isSignedIn } = storeToRefs(useUserSessionStore())
 let presenterStore = usePresenterStore()
-const { currentPresentation, nonCurrentPresentations, isInitialized, myPresentations } =
+const { currentPresentation, nonCurrentPresentations, isInitialized, myPresentationEvents } =
   storeToRefs(presenterStore)
 
 watch(

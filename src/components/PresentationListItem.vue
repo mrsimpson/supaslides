@@ -31,5 +31,5 @@ const props = defineProps({
   }
 })
 
-const setCurrent = () => (presenterStore.currentPresentationId = props.presentation.id)
+const setCurrent = () => presenterStore.setActivePresentation(props.presentation.id)
 </script>

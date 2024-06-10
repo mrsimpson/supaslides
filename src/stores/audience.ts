@@ -55,7 +55,7 @@ export const useAudienceStore = defineStore('audienceStore', {
 
         if (!error) {
           this.currentPresentationId = presentationPeek.id!
-          this.joinedPresentations = [...this.joinedPresentations, presentationPeek]
+          this.joinedPresentations.push(presentationPeek)
         }
       }
     },
@@ -78,7 +78,7 @@ export const useAudienceStore = defineStore('audienceStore', {
       if (error) {
         throw error
       }
-      this.myEvents = [...this.myEvents, reactionEvent as PresentationEvent]
+      this.myEvents.push(reactionEvent as PresentationEvent)
     }
   }
 })

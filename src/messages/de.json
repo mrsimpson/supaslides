@@ -1,0 +1,15 @@
+{
+  "account": "Konto",
+  "email_label": "Mail",
+  "please_enter_username_message": "Bitte gib einen Benutzernamen ein",
+  "profile_updated_message": "Profil aktualisiert",
+  "sign_out_button": "Abmelden",
+  "untitled_presentation_text": "Unbenannte Präsentation",
+  "update_button": "Aktualisieren",
+  "update_display_name_label": "Anzeigename",
+  "username_label": "Benutzername",
+  "website_label": "Website",
+  "you_are_participating_as": "Du nimmst Teil als",
+  "you_need_to_provide_a_name_message": "Du musst einen Anzeigenamen angeben, damit der Präsentator weiß, wie er sich an Dich wenden soll",
+  "your_display_name_placeholder": "Dieser Name wird bei Deinen Reaktionen angezeigt"
+}
