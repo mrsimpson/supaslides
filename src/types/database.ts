@@ -39,6 +39,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           created_by_alias: string | null
+          created_by_anon_uuid: string | null
           id: number
           presentation: number
           type: Database["public"]["Enums"]["event_type"]
@@ -48,6 +49,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           created_by_alias?: string | null
+          created_by_anon_uuid?: string | null
           id?: number
           presentation: number
           type: Database["public"]["Enums"]["event_type"]
@@ -57,6 +59,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           created_by_alias?: string | null
+          created_by_anon_uuid?: string | null
           id?: number
           presentation?: number
           type?: Database["public"]["Enums"]["event_type"]
@@ -166,7 +169,8 @@ export type Database = {
       join_presentation: {
         Args: {
           t_join_code: string
-          t_user_alias: string
+          t_user_alias?: string
+          u_user_anon_uuid?: string
         }
         Returns: Database["public"]["CompositeTypes"]["generic_acknowledgement_type"]
       }
@@ -192,7 +196,8 @@ export type Database = {
         Args: {
           n_presentation: number
           t_emoji: string
-          t_user_alias: string
+          t_user_alias?: string
+          u_user_anon_uuid?: string
         }
         Returns: Database["public"]["CompositeTypes"]["generic_acknowledgement_type"]
       }

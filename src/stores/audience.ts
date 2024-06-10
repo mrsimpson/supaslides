@@ -10,6 +10,7 @@ export interface PresenterState {
   currentPresentationId: RemovableRef<Presentation['id']>
   joinedPresentations: RemovableRef<PresentationPeek[]>
   myEvents: RemovableRef<PresentationEvent[]>
+  publicEvents: RemovableRef<PresentationEvent[]>
 }
 
 export const useAudienceStore = defineStore('audienceStore', {
@@ -18,7 +19,8 @@ export const useAudienceStore = defineStore('audienceStore', {
       isInitialized: false,
       currentPresentationId: useStorage('pinia/audience/currentPresentationId', 0),
       joinedPresentations: useStorage('pinia/audience/joinedPresentations', []),
-      myEvents: useStorage('pinia/audience/currentPresentationId', [])
+      myEvents: useStorage('pinia/audience/myEvents', []),
+      publicEvents: useStorage('pinia/audience/publicEvents', [])
     }) as PresenterState,
   getters: {
     currentPresentation: (state) => {
@@ -40,14 +42,15 @@ export const useAudienceStore = defineStore('audienceStore', {
       if (!joinCode) {
         throw new Error('No join code provided')
       }
-      const { nickname } = useUserSessionStore()
+      const { displayName, anonUuid } = useUserSessionStore()
       const { data: presentationPeek } = await supabase.rpc('presentation_peek', {
         t_join_code: joinCode
       })
       if (presentationPeek) {
         const { error } = await supabase.rpc('join_presentation', {
           t_join_code: joinCode,
-          t_user_alias: nickname
+          t_user_alias: displayName,
+          u_user_anon_uuid: anonUuid
         })
 
         if (!error) {
@@ -58,16 +61,24 @@ export const useAudienceStore = defineStore('audienceStore', {
     },
 
     async react(emoji: String) {
-      const { error } = await supabase.from('presentation_events').insert({
+      const { displayName, anonUuid } = useUserSessionStore()
+
+      const reactionEvent: Partial<PresentationEvent> = {
         presentation: this.currentPresentationId,
         type: 'reaction',
         created_at: new Date().toISOString(),
-        value: JSON.stringify({ emoji })
-      } as PresentationEvent)
-
-      if (!error) {
-        this.myEvents.push()
+        value: JSON.stringify({ emoji }),
+        created_by_alias: displayName,
+        created_by_anon_uuid: anonUuid
       }
+      const { error } = await supabase
+        .from('presentation_events')
+        .insert(reactionEvent as PresentationEvent)
+
+      if (error) {
+        throw error
+      }
+      this.myEvents = [...this.myEvents, reactionEvent as PresentationEvent]
     }
   }
 })

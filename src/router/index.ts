@@ -25,8 +25,7 @@ const router = createRouter({
     {
       path: '/feedback',
       name: 'feedback',
-      component: FeedbackView,
-      props: { msg: 'Feedback' }
+      component: FeedbackView
     },
     {
       path: '/presenter',

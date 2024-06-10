@@ -22,7 +22,7 @@ import type { PresentationPeek } from '@/types/entities'
 import { useAudienceStore } from '@/stores/audience'
 
 const router = useRouter()
-const joinCode = router.currentRoute.value?.query['code']
+const joinCode = router.currentRoute.value?.query['code']?.toString()
 const presenterName = router.currentRoute.value?.query['presenter']
 const presentation = ref(null as PresentationPeek | null)
 onMounted(async () => {
@@ -35,7 +35,7 @@ onMounted(async () => {
 })
 
 async function join() {
-  if (presentation.value) {
+  if (presentation.value && joinCode) {
     const audienceStore = useAudienceStore()
 
     await audienceStore.join(joinCode)
