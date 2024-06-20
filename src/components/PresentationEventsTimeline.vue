@@ -2,15 +2,17 @@
   <NDivider>What happened so far</NDivider>
   <NTimeline
     v-for="event in sortedEvents()"
+    :item-placement="isMyEvent(event) ? 'right' : 'left'"
     :theme-overrides="{ circleBorder: 'none' }"
     size="large"
   >
     <NTimelineItem
       :key="event.id"
-      :class="event.type"
+      :class="`${event.type}`"
+      :content="getContent(event)"
       :style="getItemStyle(event)"
       :time="new Date(event.created_at).toLocaleString()"
-      :title="getTitle(event)"
+      :title="event.created_by_alias"
       line-type="dashed"
     />
   </NTimeline>
@@ -21,10 +23,16 @@ import type { PresentationEvent } from '@/types/entities'
 import * as emoji from 'node-emoji'
 
 const props = defineProps({
-  events: { type: Object as () => PresentationEvent[], required: true }
+  events: { type: Object as () => PresentationEvent[], required: true },
+  myUserId: { type: String, required: false },
+  myAnonUuid: { type: String, required: false }
 })
 
-function getTitle(event: PresentationEvent) {
+function isMyEvent(event: PresentationEvent) {
+  return event.created_by_anon_uuid === props.myAnonUuid || event.created_by === props.myUserId
+}
+
+function getContent(event: PresentationEvent) {
   // noinspection FallThroughInSwitchStatementJS
   switch (event.type) {
     case 'comment':
@@ -51,7 +59,7 @@ function getTitle(event: PresentationEvent) {
       }
       return emoji.get(reaction['emoji'])
     case 'user_joined':
-      return `User ${event.value} joined`
+      return `User ${event.created_by_alias} joined`
     default:
       return 'Some strange thing happened here'
   }
@@ -60,7 +68,9 @@ function getTitle(event: PresentationEvent) {
 function getItemStyle(event: PresentationEvent) {
   return {
     paddingBottom: '1.5rem',
-    '--n-title-font-size': event.type === 'reaction' ? '300%' : '100%'
+    '--n-content-font-size': event.type === 'reaction' ? '300%' : '100%',
+    '--n-title-font-size': '0.8rem',
+    '--n-title-display': event.type == 'user_joined' ? 'none' : 'unset'
   }
 }
 

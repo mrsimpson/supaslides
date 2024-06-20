@@ -4,7 +4,11 @@
       <NCard bordered embedded size="large">
         <PresentationFactsheet :presentation="currentPresentation" />
       </NCard>
-      <PresentationEventsTimeline :events="myPresentationEvents" />
+      <PresentationEventsTimeline
+        :events="myPresentationEvents"
+        :my-anon-uuid="anonUuid"
+        :my-user-id="session?.user.id"
+      />
     </NCard>
     <NCard v-if="nonCurrentPresentations?.length" :bordered="false" title="Other presentations">
       <NList v-for="presentation in nonCurrentPresentations" :key="presentation.id" bordered>
@@ -24,7 +28,7 @@ import { useUserSessionStore } from '@/stores/userSession'
 import PresentationListItem from '@/components/PresentationListItem.vue'
 import PresentationEventsTimeline from '@/components/PresentationEventsTimeline.vue'
 
-const { isSignedIn } = storeToRefs(useUserSessionStore())
+const { isSignedIn, anonUuid, session } = storeToRefs(useUserSessionStore())
 let presenterStore = usePresenterStore()
 const { currentPresentation, nonCurrentPresentations, isInitialized, myPresentationEvents } =
   storeToRefs(presenterStore)

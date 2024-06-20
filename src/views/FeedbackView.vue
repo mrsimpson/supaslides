@@ -15,6 +15,8 @@
       <ReactionsPanel :presentation="currentPresentation" />
       <PresentationEventsTimeline
         :events="currentPresentationEvents()"
+        :my-anon-uuid="anonUuid"
+        :my-user-id="session?.user.id"
       ></PresentationEventsTimeline>
     </div>
   </NSpace>
@@ -30,7 +32,7 @@ import type { PresentationEvent } from '@/types/entities'
 import { useI18n } from 'vue-i18n'
 import DisplayNameForm from '@/components/DisplayNameForm.vue'
 
-const { isSignedIn, displayName } = storeToRefs(useUserSessionStore())
+const { anonUuid, session, displayName } = storeToRefs(useUserSessionStore())
 const { currentPresentationId, currentPresentation, myEvents, publicEvents } =
   storeToRefs(useAudienceStore())
 const { t } = useI18n()

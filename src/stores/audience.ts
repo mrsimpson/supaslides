@@ -42,7 +42,7 @@ export const useAudienceStore = defineStore('audienceStore', {
       if (!joinCode) {
         throw new Error('No join code provided')
       }
-      const { displayName, anonUuid } = useUserSessionStore()
+      const { displayName, session, anonUuid } = useUserSessionStore()
       const { data: presentationPeek } = await supabase.rpc('presentation_peek', {
         t_join_code: joinCode
       })
@@ -50,6 +50,7 @@ export const useAudienceStore = defineStore('audienceStore', {
         const { error } = await supabase.rpc('join_presentation', {
           t_join_code: joinCode,
           t_user_alias: displayName,
+          u_user_uuid: session?.user.id,
           u_user_anon_uuid: anonUuid
         })
 
@@ -61,13 +62,14 @@ export const useAudienceStore = defineStore('audienceStore', {
     },
 
     async react(emoji: String) {
-      const { displayName, anonUuid } = useUserSessionStore()
+      const { displayName, anonUuid, session } = useUserSessionStore()
 
       const reactionEvent: Partial<PresentationEvent> = {
         presentation: this.currentPresentationId,
         type: 'reaction',
         created_at: new Date().toISOString(),
         value: JSON.stringify({ emoji }),
+        created_by: session?.user.id,
         created_by_alias: displayName,
         created_by_anon_uuid: anonUuid
       }

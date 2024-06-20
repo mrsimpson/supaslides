@@ -170,6 +170,7 @@ export type Database = {
         Args: {
           t_join_code: string
           t_user_alias?: string
+          u_user_uuid?: string
           u_user_anon_uuid?: string
         }
         Returns: Database["public"]["CompositeTypes"]["generic_acknowledgement_type"]
@@ -197,6 +198,7 @@ export type Database = {
           n_presentation: number
           t_emoji: string
           t_user_alias?: string
+          u_user_uuid?: string
           u_user_anon_uuid?: string
         }
         Returns: Database["public"]["CompositeTypes"]["generic_acknowledgement_type"]
