@@ -37,13 +37,12 @@
 import { useUserSessionStore } from '@/stores/userSession'
 import { CheckmarkOutline } from '@vicons/carbon'
 import { onMounted, ref } from 'vue'
-import { type FormInst, useMessage } from 'naive-ui'
+import { type FormInst } from 'naive-ui'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 
 const { t } = useI18n()
 const formRef = ref<FormInst | null>(null)
-const message = useMessage()
 const formValue = ref({ displayName: '' as string | null })
 const rules = {
   displayName: {

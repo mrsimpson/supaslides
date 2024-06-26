@@ -61,26 +61,34 @@ export const useAudienceStore = defineStore('audienceStore', {
       }
     },
 
-    async react(emoji: String) {
+    async insertEvent(eventType: PresentationEvent['type'], value: any) {
       const { displayName, anonUuid, session } = useUserSessionStore()
 
-      const reactionEvent: Partial<PresentationEvent> = {
+      const event: Partial<PresentationEvent> = {
         presentation: this.currentPresentationId,
-        type: 'reaction',
+        type: eventType,
         created_at: new Date().toISOString(),
-        value: JSON.stringify({ emoji }),
+        value: JSON.stringify(value),
         created_by: session?.user.id,
         created_by_alias: displayName,
         created_by_anon_uuid: anonUuid
       }
       const { error } = await supabase
         .from('presentation_events')
-        .insert(reactionEvent as PresentationEvent)
+        .insert(event as PresentationEvent)
 
       if (error) {
         throw error
       }
-      this.myEvents.push(reactionEvent as PresentationEvent)
+      this.myEvents.push(event as PresentationEvent)
+    },
+
+    async react(emoticon: string, emojiText: string) {
+      await this.insertEvent('reaction', { emoticon, emojiText })
+    },
+
+    async comment(commentText: string) {
+      await this.insertEvent('comment', { commentText })
     }
   }
 })

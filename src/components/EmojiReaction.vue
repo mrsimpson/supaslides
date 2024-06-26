@@ -21,20 +21,21 @@ const props = defineProps({
 const debounced = ref(false)
 
 const textRepresentation = () => emoji.which(props.emoticon)
+const { react } = useAudienceStore()
 
 function handleClick(e: Event) {
   e.preventDefault()
   const text = textRepresentation()
   if (text) {
-    sendEmoji(text)
+    sendEmoji(props.emoticon, text)
   } else {
     console.error(props.emoticon, ' is an unknown emoji')
   }
 }
 
-function sendEmoji(emojiTextRepresentation: string) {
+function sendEmoji(emoticon: string, emojiTextRepresentation: string) {
   try {
-    useAudienceStore().react(emojiTextRepresentation)
+    react(emoticon, emojiTextRepresentation)
     debounced.value = true
     message.success(props.emoticon)
     setTimeout(() => (debounced.value = false), 1000)

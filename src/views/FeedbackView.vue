@@ -13,11 +13,12 @@
     <DisplayNameForm />
     <div v-if="currentPresentation && displayName">
       <ReactionsPanel :presentation="currentPresentation" />
+      <CommentForm :presentation="currentPresentation" />
       <PresentationEventsTimeline
         :events="currentPresentationEvents()"
         :my-anon-uuid="anonUuid"
         :my-user-id="session?.user.id"
-      ></PresentationEventsTimeline>
+      />
     </div>
   </NSpace>
 </template>
@@ -31,6 +32,7 @@ import PresentationEventsTimeline from '@/components/PresentationEventsTimeline.
 import type { PresentationEvent } from '@/types/entities'
 import { useI18n } from 'vue-i18n'
 import DisplayNameForm from '@/components/DisplayNameForm.vue'
+import CommentForm from '@/components/CommentForm.vue'
 
 const { anonUuid, session, displayName } = storeToRefs(useUserSessionStore())
 const { currentPresentationId, currentPresentation, myEvents, publicEvents } =

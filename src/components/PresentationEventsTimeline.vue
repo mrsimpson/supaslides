@@ -20,7 +20,6 @@
 
 <script lang="ts" setup>
 import type { PresentationEvent } from '@/types/entities'
-import * as emoji from 'node-emoji'
 
 const props = defineProps({
   events: { type: Object as () => PresentationEvent[], required: true },
@@ -57,7 +56,7 @@ function getContent(event: PresentationEvent) {
         // this happens in realtime updates: They don't need to be parsed again
         reaction = event.value
       }
-      return emoji.get(reaction['emoji'])
+      return reaction['emoticon']
     case 'user_joined':
       return `User ${event.created_by_alias} joined`
     default:
@@ -76,7 +75,7 @@ function getItemStyle(event: PresentationEvent) {
 
 function sortedEvents() {
   return props.events.sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
   )
 }
 </script>
