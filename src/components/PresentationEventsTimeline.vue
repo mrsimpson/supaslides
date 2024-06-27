@@ -1,25 +1,21 @@
 <template>
-  <NDivider>What happened so far</NDivider>
-  <NTimeline
-    v-for="event in sortedEvents()"
-    :item-placement="isMyEvent(event) ? 'right' : 'left'"
-    :theme-overrides="{ circleBorder: 'none' }"
-    size="large"
-  >
-    <NTimelineItem
+  <n-divider />
+  <div ref="listContainer" class="list-container">
+    <div
+      v-for="event in sortedEvents()"
       :key="event.id"
-      :class="`${event.type}`"
-      :content="getContent(event)"
-      :style="getItemStyle(event)"
-      :time="new Date(event.created_at).toLocaleString()"
-      :title="event.created_by_alias"
-      line-type="dashed"
-    />
-  </NTimeline>
+      :class="`list-item`"
+      :style="{ flexDirection: isMyEvent(event) ? 'row-reverse' : 'row' }"
+    >
+      <Event :key="event.id" :event="event" :is-mine="isMyEvent(event)" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import type { PresentationEvent } from '@/types/entities'
+import Event from '@/components/Event.vue'
+import { nextTick, ref, watch } from 'vue'
 
 const props = defineProps({
   events: { type: Object as () => PresentationEvent[], required: true },
@@ -27,50 +23,22 @@ const props = defineProps({
   myAnonUuid: { type: String, required: false }
 })
 
+const listContainer = ref<HTMLElement | null>(null)
+
+watch(
+  () => props.events,
+  async () => {
+    await nextTick()
+    const container = listContainer.value
+    if (container) {
+      container.scrollTop = container.scrollHeight
+    }
+  },
+  { deep: true }
+)
+
 function isMyEvent(event: PresentationEvent) {
   return event.created_by_anon_uuid === props.myAnonUuid || event.created_by === props.myUserId
-}
-
-function getContent(event: PresentationEvent) {
-  // noinspection FallThroughInSwitchStatementJS
-  switch (event.type) {
-    case 'comment':
-      if (event.value && typeof event.value === 'string') {
-        return event.value
-      }
-    case 'slide_change':
-      return 'Presenter switched to slide ' + event.value
-    case 'presentation_start':
-      return 'presentation was started'
-    case 'presentation_stop':
-      return 'presentation was stopped'
-    case 'reaction':
-      let reaction
-      if (event.value && typeof event.value === 'string') {
-        try {
-          reaction = JSON.parse(event.value)
-        } catch (e) {
-          console.error(e)
-        }
-      } else if (event.value && typeof event.value === 'object') {
-        // this happens in realtime updates: They don't need to be parsed again
-        reaction = event.value
-      }
-      return reaction['emoticon']
-    case 'user_joined':
-      return `User ${event.created_by_alias} joined`
-    default:
-      return 'Some strange thing happened here'
-  }
-}
-
-function getItemStyle(event: PresentationEvent) {
-  return {
-    paddingBottom: '1.5rem',
-    '--n-content-font-size': event.type === 'reaction' ? '300%' : '100%',
-    '--n-title-font-size': '0.8rem',
-    '--n-title-display': event.type == 'user_joined' ? 'none' : 'unset'
-  }
 }
 
 function sortedEvents() {
@@ -79,3 +47,15 @@ function sortedEvents() {
   )
 }
 </script>
+
+<style scoped>
+.list-container {
+  height: 300px; /* Adjust as needed */
+  overflow-y: auto;
+}
+
+.list-item {
+  display: flex;
+  margin-bottom: 4px;
+}
+</style>

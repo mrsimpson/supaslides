@@ -11,14 +11,15 @@
       </h2>
     </NCard>
     <DisplayNameForm />
+    <PresentationEventsTimeline
+      :events="currentPresentationEvents()"
+      :my-anon-uuid="anonUuid"
+      :my-user-id="session?.user.id"
+    />
     <div v-if="currentPresentation && displayName">
+      <n-divider />
       <ReactionsPanel :presentation="currentPresentation" />
       <CommentForm :presentation="currentPresentation" />
-      <PresentationEventsTimeline
-        :events="currentPresentationEvents()"
-        :my-anon-uuid="anonUuid"
-        :my-user-id="session?.user.id"
-      />
     </div>
   </NSpace>
 </template>
