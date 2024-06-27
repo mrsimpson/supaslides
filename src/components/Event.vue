@@ -1,11 +1,25 @@
 <template>
   <div :style="{ flexDirection: isMine ? 'row-reverse' : 'row' }" class="event">
-    <div v-if="event.type === 'reaction'">
-      <span :style="{ fontSize: '300%' }">{{ getContent(event) }}</span>
-    </div>
-    <div v-else-if="event.type === 'comment'" class="callout">{{ getContent(event) }}</div>
+    <slot name="icon">
+      <n-icon size="1.5rem">
+        <UserAvatar v-if="event.type === 'user_joined'" />
+        <PresentationFile
+          v-else-if="['presentation_start', 'presentation_stop'].includes(event.type)"
+        />
+      </n-icon>
+    </slot>
+    <slot name="content">
+      <div v-if="event.type === 'reaction'">
+        <span :style="{ fontSize: '300%' }">{{ getContent(event) }}</span>
+      </div>
+      <div v-else-if="event.type === 'comment'">
+        <SpeechBubble :callout-position="props.isMine ? 'right' : 'left'">
+          <template #default> {{ getContent(event) }}</template>
+        </SpeechBubble>
+      </div>
 
-    <div v-else>{{ getContent(event) }}</div>
+      <div v-else>{{ getContent(event) }}</div>
+    </slot>
     <div class="creation-info">
       {{ event.created_by_alias }}, {{ new Date(event.created_at).toLocaleString() }}
     </div>
@@ -15,6 +29,8 @@
 <script lang="ts" setup>
 import type { PresentationEvent } from '@/types/entities'
 import { useI18n } from 'vue-i18n'
+import { PresentationFile, UserAvatar } from '@vicons/carbon'
+import SpeechBubble from '@/components/SpeechBubble.vue'
 
 const { t } = useI18n()
 
@@ -82,16 +98,9 @@ function getItemStyle(event: PresentationEvent) {
 
   .creation-info {
     font-size: 0.75rem;
-    margin-top: 4px;
     display: none;
     padding-left: 10px;
     padding-right: 10px;
-  }
-
-  .callout {
-    padding: 20px;
-    border: 1px solid #f2f2f2;
-    border-radius: 10px;
   }
 }
 
@@ -99,5 +108,10 @@ function getItemStyle(event: PresentationEvent) {
   .creation-info {
     display: unset;
   }
+}
+
+.n-icon {
+  margin-left: 10px;
+  margin: 10px;
 }
 </style>

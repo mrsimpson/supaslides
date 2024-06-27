@@ -44,6 +44,7 @@ declare module 'vue' {
     SignIn: typeof import('./src/components/SignIn.vue')['default']
     SignInMagicLink: typeof import('./src/components/SignInMagicLink.vue')['default']
     SignInUsernamePassword: typeof import('./src/components/SignInUsernamePassword.vue')['default']
+    SpeechBubble: typeof import('./src/components/SpeechBubble.vue')['default']
     TheFooter: typeof import('./src/components/TheFooter.vue')['default']
     TheNavigation: typeof import('./src/components/TheNavigation.vue')['default']
     ThePresenterPage: typeof import('./src/components/ThePresenterPage.vue')['default']
