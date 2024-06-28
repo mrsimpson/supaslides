@@ -11,6 +11,7 @@
 
 <script lang="ts" setup>
 import { computed, defineProps } from 'vue'
+import { useThemeVars } from 'naive-ui'
 
 interface StyleObject {
   [key: string]: string | number
@@ -22,7 +23,7 @@ const props = defineProps<{
 }>()
 
 const defaultStyles = {
-  backgroundColor: 'var(--primary-color, #00aabb)',
+  backgroundColor: useThemeVars().value.primaryColor,
   color: 'white'
 }
 

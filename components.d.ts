@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Account: typeof import('./src/components/Account.vue')['default']
     Avatar: typeof import('./src/components/Avatar.vue')['default']
+    AvatarIcon: typeof import('./src/components/AvatarIcon.vue')['default']
     CommentForm: typeof import('./src/components/CommentForm.vue')['default']
     DisplayName: typeof import('./src/components/DisplayName.vue')['default']
     DisplayNameForm: typeof import('./src/components/DisplayNameForm.vue')['default']
@@ -23,6 +24,7 @@ declare module 'vue' {
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
     MatomoOptOut: typeof import('./src/components/MatomoOptOut.vue')['default']
+    NAvatar: typeof import('naive-ui')['NAvatar']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NDivider: typeof import('naive-ui')['NDivider']

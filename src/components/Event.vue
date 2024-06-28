@@ -2,10 +2,11 @@
   <div :style="{ flexDirection: isMine ? 'row-reverse' : 'row' }" class="event">
     <slot name="icon">
       <n-icon size="1.5rem">
-        <UserAvatar v-if="event.type === 'user_joined'" />
-        <PresentationFile
+        <UserIcon v-if="event.type === 'user_joined'" />
+        <PresentationIcon
           v-else-if="['presentation_start', 'presentation_stop'].includes(event.type)"
         />
+        <AvatarIcon v-else :name="event.created_by_alias ?? undefined" />
       </n-icon>
     </slot>
     <slot name="content">
@@ -29,8 +30,9 @@
 <script lang="ts" setup>
 import type { PresentationEvent } from '@/types/entities'
 import { useI18n } from 'vue-i18n'
-import { PresentationFile, UserAvatar } from '@vicons/carbon'
+import { PresentationFile as PresentationIcon, UserAvatar as UserIcon } from '@vicons/carbon'
 import SpeechBubble from '@/components/SpeechBubble.vue'
+import AvatarIcon from '@/components/AvatarIcon.vue'
 
 const { t } = useI18n()
 
@@ -111,7 +113,7 @@ function getItemStyle(event: PresentationEvent) {
 }
 
 .n-icon {
-  margin-left: 10px;
-  margin: 10px;
+  margin-left: 20px;
+  margin: 20px;
 }
 </style>
