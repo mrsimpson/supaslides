@@ -1,3 +1,31 @@
+<template>
+  <n-config-provider :theme="theme" :theme-overrides="null">
+    <n-theme-editor :style="themeEditorStyle">
+      <n-layout :has-sider="isSignedIn">
+        <n-layout-sider
+          v-if="isSignedIn"
+          :collapsed="menuCollapsed"
+          :collapsed-width="64"
+          :onUpdate:collapsed="handleSiderUpdate"
+          collapse-mode="width"
+          show-trigger
+        >
+          <TheNavigation />
+        </n-layout-sider>
+        <n-layout-content class="full-height">
+          <n-message-provider>
+            <n-space vertical>
+              <n-card centered>
+                <RouterView />
+              </n-card>
+            </n-space>
+          </n-message-provider>
+        </n-layout-content>
+      </n-layout>
+    </n-theme-editor>
+  </n-config-provider>
+</template>
+
 <script lang="ts" setup>
 import { ref } from 'vue'
 import {
@@ -7,16 +35,14 @@ import {
   NConfigProvider,
   NLayout,
   NLayoutContent,
-  NLayoutFooter,
-  NLayoutHeader,
   NMessageProvider,
   NSpace,
   NThemeEditor,
   useOsTheme
 } from 'naive-ui'
 import TheNavigation from '@/components/TheNavigation.vue'
-import TheFooter from '@/components/TheFooter.vue'
 import { useUserSessionStore } from '@/stores/userSession'
+import { storeToRefs } from 'pinia'
 
 const osThemeRef = useOsTheme()
 const theme = ref((osThemeRef.value === 'dark' ? darkTheme : null) as GlobalTheme | null)
@@ -37,31 +63,12 @@ const theme = ref((osThemeRef.value === 'dark' ? darkTheme : null) as GlobalThem
 const themeEditorStyle = localStorage.getItem('theme') === 'true' ? {} : { display: 'none' }
 
 useUserSessionStore().initialize()
-</script>
+const { menuCollapsed, isSignedIn } = storeToRefs(useUserSessionStore())
 
-<template>
-  <n-config-provider :theme="theme" :theme-overrides="null">
-    <n-theme-editor :style="themeEditorStyle">
-      <n-layout>
-        <n-layout-header>
-          <TheNavigation />
-        </n-layout-header>
-        <n-layout-content class="full-height">
-          <n-message-provider>
-            <n-space vertical>
-              <n-card centered>
-                <RouterView />
-              </n-card>
-            </n-space>
-          </n-message-provider>
-        </n-layout-content>
-        <n-layout-footer>
-          <TheFooter />
-        </n-layout-footer>
-      </n-layout>
-    </n-theme-editor>
-  </n-config-provider>
-</template>
+function handleSiderUpdate(isCollapsed: boolean) {
+  menuCollapsed.value = isCollapsed
+}
+</script>
 
 <!-- Global styles -->
 <style>

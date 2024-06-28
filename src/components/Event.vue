@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { PresentationEvent } from '@/types/entities'
+import type { PresentationEventType } from '@/types/entities'
 import { useI18n } from 'vue-i18n'
 import { PresentationFile as PresentationIcon, UserAvatar as UserIcon } from '@vicons/carbon'
 import SpeechBubble from '@/components/SpeechBubble.vue'
@@ -41,6 +41,15 @@ const props = defineProps({
   isMine: { type: Boolean, required: true }
 })
 
+interface CommentEventValue {
+  commentText?: string
+}
+
+interface PresentationEvent {
+  type: PresentationEventType
+  value: string | CommentEventValue | null
+}
+
 function getContent(event: PresentationEvent) {
   // noinspection FallThroughInSwitchStatementJS
   switch (event.type) {
@@ -52,11 +61,15 @@ function getContent(event: PresentationEvent) {
             if (typeof commentValue === 'object' && !Array.isArray(commentValue)) {
               return commentValue?.commentText ?? undefined
             }
+          } else if (typeof event.value === 'object') {
+            return event.value.commentText
           }
         } catch (e) {
           // do nothing, just return the raw data
         }
-        return event.value
+        if (typeof event.value === 'object') {
+          return event.value.commentText
+        }
       }
     case 'slide_change':
       return t('presenter_switched_to_slide') + event.value

@@ -10,6 +10,7 @@ export interface UserSessionState {
   anonUuid: RemovableRef<string>
   session: Session | null
   displayName: RemovableRef<string>
+  menuCollapsed: RemovableRef<boolean>
 }
 
 export const useUserSessionStore = defineStore('userSessionStore', {
@@ -18,6 +19,7 @@ export const useUserSessionStore = defineStore('userSessionStore', {
       session: null,
       anonUuid: useStorage('pinia/userSession/anonUuid', uuid()),
       displayName: useStorage('pinia/userSession/displayName', ''),
+      menuCollapsed: useStorage('pinia/userSession/menuCollapsed', false),
       initialized: false
     }) as UserSessionState,
   getters: {

@@ -1,4 +1,4 @@
-import { h, type Component } from 'vue'
+import { type Component, h } from 'vue'
 import { NIcon } from 'naive-ui'
 
-export default (icon: Component) => () => h(NIcon, null, { default: () => h(icon) })
+export default (icon: Component | string) => () => h(NIcon, null, { default: () => h(icon) })
