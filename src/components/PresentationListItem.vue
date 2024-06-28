@@ -21,8 +21,10 @@ import type { Presentation } from '@/types/entities.js'
 import { usePresenterStore } from '@/stores/presenter'
 import { NButton, NIcon, NListItem } from 'naive-ui'
 import { CheckmarkOutline } from '@vicons/carbon'
+import { useRouter } from 'vue-router'
 
 const presenterStore = usePresenterStore()
+const router = useRouter()
 
 const props = defineProps({
   presentation: {
@@ -31,5 +33,8 @@ const props = defineProps({
   }
 })
 
-const setCurrent = () => presenterStore.setActivePresentation(props.presentation.id)
+const setCurrent = () => {
+  presenterStore.setActivePresentation(props.presentation.id)
+  router.push({ name: 'presentation', params: { presentationId: props.presentation?.id } })
+}
 </script>

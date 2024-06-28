@@ -2,17 +2,12 @@
   <NSpace vertical>
     <NCard v-if="currentPresentation" :bordered="false" title="Current presentation">
       <NCard bordered embedded size="large">
-        <PresentationFactsheet :presentation="currentPresentation" />
+        <PresentationFactsheet :presentation="currentPresentation" :show-start-stop="false" />
       </NCard>
-      <PresentationEventsTimeline
-        :events="myPresentationEvents"
-        :my-anon-uuid="anonUuid"
-        :my-user-id="session?.user.id"
-      />
     </NCard>
     <NCard v-if="nonCurrentPresentations?.length" :bordered="false" title="Other presentations">
       <NList v-for="presentation in nonCurrentPresentations" :key="presentation.id" bordered>
-        <PresentationListItem :presentation="presentation" />
+        <PresentationListItem :presentation="presentation" :show-start-stop="false" />
       </NList>
     </NCard>
   </NSpace>
@@ -26,7 +21,6 @@ import { storeToRefs } from 'pinia'
 import { watch } from 'vue'
 import { useUserSessionStore } from '@/stores/userSession'
 import PresentationListItem from '@/components/PresentationListItem.vue'
-import PresentationEventsTimeline from '@/components/PresentationEventsTimeline.vue'
 
 const { isSignedIn, anonUuid, session } = storeToRefs(useUserSessionStore())
 let presenterStore = usePresenterStore()

@@ -38,7 +38,7 @@ const menuOptions: MenuOption[] = [
         RouterLink,
         {
           to: {
-            name: 'presenter'
+            name: 'presentations'
           }
         },
         { default: () => 'My Presentations' }

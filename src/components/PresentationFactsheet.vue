@@ -53,7 +53,11 @@
     <template #action>
       <NFlex justify="space-between">
         <NButtonGroup>
+          <NButton v-if="showOpen" round @click="handlePresentationOpen()">
+            {{ t('open_button') }}
+          </NButton>
           <NButton
+            v-if="showStartStop"
             :disabled="presentation.lc_status === 'started'"
             round
             @click="handleClickStart()"
@@ -63,9 +67,10 @@
                 <Play />
               </NIcon>
             </template>
-            {{ presentation.lc_status === 'started' ? 'Started' : 'Start' }}
+            {{ presentation.lc_status === 'started' ? t('started_button') : t('start_button') }}
           </NButton>
           <NButton
+            v-if="showStartStop"
             :disabled="presentation.lc_status !== 'started'"
             round
             @click="handleClickStop()"
@@ -75,7 +80,7 @@
                 <Stop />
               </NIcon>
             </template>
-            Stop
+            {{ t('stop_button') }}
           </NButton>
         </NButtonGroup>
         <NButtonGroup>
@@ -87,7 +92,7 @@
             </template>
             QR-Code
           </NButton>
-          <NButton round @click="toggleEmebddingCodeShown()">
+          <NButton v-if="showEmbedding" round @click="toggleEmebddingCodeShown()">
             <template #icon>
               <NIcon>
                 <Code />
@@ -108,6 +113,8 @@ import slug from '@/lib/slug'
 import type { Presentation } from '@/types/entities'
 import { usePresenterStore } from '@/stores/presenter'
 import { Code, Play, QrCode, Stop } from '@vicons/carbon'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const showQrCode = ref(false)
 const showEmbeddingCode = ref(false)
@@ -116,10 +123,25 @@ const props = defineProps({
   presentation: {
     type: Object as () => Presentation,
     required: true
+  },
+  showStartStop: {
+    type: Boolean,
+    default: true
+  },
+  showOpen: {
+    type: Boolean,
+    default: true
+  },
+  showEmbedding: {
+    type: Boolean,
+    default: true
   }
 })
 
 const emit = defineEmits(['started'])
+
+const router = useRouter()
+const { t } = useI18n()
 
 const toggleQrCodeShown = () => {
   showQrCode.value = !showQrCode.value
@@ -154,6 +176,12 @@ const handleClickStart = async () => {
 
 const handleClickStop = async () => {
   await usePresenterStore().stopPresentation(props.presentation.id)
+}
+
+function handlePresentationOpen() {
+  const { presentation } = props
+
+  router.push({ name: 'presentation', params: { presentationId: presentation?.id } })
 }
 
 const getParticipationUrl = () =>

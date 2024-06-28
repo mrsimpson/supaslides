@@ -51,6 +51,8 @@ declare module 'vue' {
     SpeechBubble: typeof import('./src/components/SpeechBubble.vue')['default']
     TheFooter: typeof import('./src/components/TheFooter.vue')['default']
     TheNavigation: typeof import('./src/components/TheNavigation.vue')['default']
+    ThePresentationPage: typeof import('./src/components/ThePresentationPage.vue')['default']
+    ThePresentationsList: typeof import('./src/components/ThePresentationsList.vue')['default']
     ThePresenterPage: typeof import('./src/components/ThePresenterPage.vue')['default']
   }
 }

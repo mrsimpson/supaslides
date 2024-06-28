@@ -6,13 +6,15 @@
       <router-link to="/me">Sign In</router-link>
     </NButton>
   </NCard>
-  <ThePresenterPage v-else />
+  <ThePresentationPage v-else-if="$route.name === 'presentation'" />
+  <ThePresentationsList v-else />
 </template>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
 import { NButton, NCard } from 'naive-ui'
 import { useUserSessionStore } from '@/stores/userSession'
-import ThePresenterPage from '@/components/ThePresenterPage.vue'
+import ThePresentationsList from '@/components/ThePresentationsList.vue'
+import ThePresentationPage from '@/components/ThePresentationPage.vue'
 
 const { isSignedIn } = storeToRefs(useUserSessionStore())
 </script>

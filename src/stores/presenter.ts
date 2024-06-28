@@ -55,7 +55,7 @@ export const usePresenterStore = defineStore('presenterStore', {
     },
     async stopPresentation(presentationId: Presentation['id']) {
       const response = await supabase.rpc('presentation_stop', { n_presentation: presentationId })
-      this.currentPresentationId = presentationId
+      this.currentPresentationId = 0
       return response.data
     },
     async syncMyPresentations() {
@@ -103,7 +103,7 @@ export const usePresenterStore = defineStore('presenterStore', {
     },
     async syncPresentationEvents(presentationId: Presentation['id']) {
       const { session } = useUserSessionStore()
-      if (session) {
+      if (session && presentationId) {
         const { data: presentation, error } = await supabase
           .from('presentations')
           .select()
@@ -139,7 +139,7 @@ export const usePresenterStore = defineStore('presenterStore', {
                 break
               case 'DELETE':
                 this.myPresentationEvents = this.myPresentationEvents.filter(
-                  (ev) => ev.id !== payload.old.id
+                  (event) => event.id !== payload.old.id
                 )
                 break
             }

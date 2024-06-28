@@ -1,7 +1,7 @@
 <template>
   <div :style="{ flexDirection: isMine ? 'row-reverse' : 'row' }" class="event">
     <slot name="icon">
-      <n-icon size="1.5rem">
+      <n-icon class="type-icon" size="1.5rem">
         <UserIcon v-if="event.type === 'user_joined'" />
         <PresentationIcon
           v-else-if="['presentation_start', 'presentation_stop'].includes(event.type)"
@@ -125,8 +125,8 @@ function getItemStyle(event: PresentationEvent) {
   }
 }
 
-.n-icon {
+.type-icon {
   margin-left: 20px;
-  margin: 20px;
+  margin-right: 20px;
 }
 </style>

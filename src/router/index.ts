@@ -28,8 +28,13 @@ const router = createRouter({
       component: FeedbackView
     },
     {
-      path: '/presenter',
-      name: 'presenter',
+      path: '/presentations/:presentationId',
+      name: 'presentation',
+      component: PresenterView
+    },
+    {
+      path: '/presentations',
+      name: 'presentations',
       component: PresenterView
     },
     { path: '/me', name: 'me', component: AccountView },
