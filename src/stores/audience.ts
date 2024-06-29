@@ -4,6 +4,7 @@ import type { Presentation, PresentationEvent, PresentationPeek } from '@/types/
 import type { RemovableRef } from '@vueuse/core'
 import { useStorage } from '@vueuse/core'
 import { useUserSessionStore } from '@/stores/userSession'
+import realtime from '@/lib/realtime'
 
 export interface PresenterState {
   isInitialized: Boolean
@@ -54,9 +55,14 @@ export const useAudienceStore = defineStore('audienceStore', {
           u_user_anon_uuid: anonUuid
         })
 
-        if (!error) {
-          this.currentPresentationId = presentationPeek.id!
+        if (!error && presentationPeek.id) {
+          this.currentPresentationId = presentationPeek.id
           this.joinedPresentations.push(presentationPeek)
+
+          // set up reactivity on public events
+          realtime(supabase).onPresentationEvent(presentationPeek.id, (event) => {
+            this.publicEvents.push(event)
+          })
         }
       }
     },
