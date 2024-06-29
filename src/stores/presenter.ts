@@ -1,17 +1,39 @@
 import { defineStore } from 'pinia'
 import { useUserSessionStore } from '@/stores/userSession'
 import { supabase } from '@/lib/supabase'
-import type { Presentation, PresentationEvent } from '@/types/entities'
+import type { Acknowledgement, Presentation, PresentationEvent } from '@/types/entities'
 import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
 import { upsertObjectInArray } from '@/lib/array'
 import type { RemovableRef } from '@vueuse/core'
 import { useStorage } from '@vueuse/core'
+import realtime from '@/lib/realtime'
 
 export interface PresenterState {
   isInitialized: Boolean
   currentPresentationId: RemovableRef<Presentation['id']>
   myPresentations: Presentation[]
   myPresentationEvents: PresentationEvent[]
+}
+
+async function handleEventResponse<Database, SchemaName>(
+  response: PostgrestResponseSuccess<Acknowledgement> | PostgrestResponseFailure,
+  presentationId: number
+) {
+  const { error, data: acknowledgment } = response
+  if (error) {
+    console.error(error)
+    throw error
+  }
+  if (acknowledgment && acknowledgment.id) {
+    const { data: event, error } = await supabase
+      .from('presentation_events')
+      .select('*')
+      .eq('id', acknowledgment.id)
+      .single()
+    //TODO: Encrypt payload with joinCode
+    if (event && event.is_public) await realtime(supabase).sendEvent(presentationId, event)
+    return acknowledgment
+  }
 }
 
 export const usePresenterStore = defineStore('presenterStore', {
@@ -51,12 +73,12 @@ export const usePresenterStore = defineStore('presenterStore', {
     async startPresentation(presentationId: Presentation['id']) {
       const response = await supabase.rpc('presentation_start', { n_presentation: presentationId })
       this.currentPresentationId = presentationId
-      return response.data
+      return handleEventResponse(response, presentationId)
     },
     async stopPresentation(presentationId: Presentation['id']) {
       const response = await supabase.rpc('presentation_stop', { n_presentation: presentationId })
       this.currentPresentationId = 0
-      return response.data
+      return handleEventResponse(response, presentationId)
     },
     async syncMyPresentations() {
       const { session } = useUserSessionStore()

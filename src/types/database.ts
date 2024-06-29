@@ -41,6 +41,7 @@ export type Database = {
           created_by_alias: string | null
           created_by_anon_uuid: string | null
           id: number
+          is_public: boolean
           presentation: number
           type: Database["public"]["Enums"]["event_type"]
           value: Json | null
@@ -51,6 +52,7 @@ export type Database = {
           created_by_alias?: string | null
           created_by_anon_uuid?: string | null
           id?: number
+          is_public?: boolean
           presentation: number
           type: Database["public"]["Enums"]["event_type"]
           value?: Json | null
@@ -61,6 +63,7 @@ export type Database = {
           created_by_alias?: string | null
           created_by_anon_uuid?: string | null
           id?: number
+          is_public?: boolean
           presentation?: number
           type?: Database["public"]["Enums"]["event_type"]
           value?: Json | null

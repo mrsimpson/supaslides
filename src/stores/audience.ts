@@ -31,12 +31,20 @@ export const useAudienceStore = defineStore('audienceStore', {
     }
   },
   actions: {
+    async listenToPresentationEvents() {
+      await realtime(supabase).onPresentationEvent(this.currentPresentationId, (event) => {
+        this.publicEvents.push(event)
+      })
+    },
     async initialize() {
       const { session } = useUserSessionStore()
       // this can only be initialized once the user has logged in
       if (session?.user.id) {
         // await this.syncMyPresentations()
         this.isInitialized = true
+      }
+      if (this.currentPresentationId) {
+        await this.listenToPresentationEvents()
       }
     },
     async join(joinCode: Presentation['join_code']) {
@@ -58,11 +66,7 @@ export const useAudienceStore = defineStore('audienceStore', {
         if (!error && presentationPeek.id) {
           this.currentPresentationId = presentationPeek.id
           this.joinedPresentations.push(presentationPeek)
-
-          // set up reactivity on public events
-          realtime(supabase).onPresentationEvent(presentationPeek.id, (event) => {
-            this.publicEvents.push(event)
-          })
+          await this.listenToPresentationEvents()
         }
       }
     },
