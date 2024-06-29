@@ -18,7 +18,7 @@ Slideshow aims at bridging this gap between presenter and audience.
 
 - vue3. Nuxt is intentionally excluded as the app shall be deployable without the need of a server (e. g. on GH pages)
 - As few dependencies as possible. Majorly dev dependencies and the
-  wonderful [naive-ui components-library](naive-ui.com)
+  wonderful [naive-ui components-library](https://www.naive-ui.com)
 - Jest for unit-testing
 - Playwright for integration testing (if necessary)
 
