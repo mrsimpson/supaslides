@@ -20,6 +20,11 @@
               :value="getParticipationUrl()"
               @click="toggleQrCodeShown()"
             />
+            <div>
+              Or enter
+              <a :href="getParticipationUrl()" target="_blank">{{ getParticipationUrl() }}</a> in
+              your browser
+            </div>
           </template>
           <template #footer>
             <NButton :style="{ width: '100%' }" @click="handleDownloadQRCode()">Download</NButton>
