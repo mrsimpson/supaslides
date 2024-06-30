@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref, toRefs, watch } from 'vue'
 import { supabase } from '@/lib/supabase'
 import { NAvatar } from 'naive-ui'
@@ -13,9 +13,11 @@ const files = ref()
 
 const downloadImage = async () => {
   try {
-    const { data, error } = await supabase.storage.from('avatars').download(path.value)
-    if (error) throw error
-    src.value = URL.createObjectURL(data)
+    if (path.value) {
+      const { data, error } = await supabase.storage.from('avatars').download(path.value)
+      if (error) throw error
+      src.value = URL.createObjectURL(data)
+    }
   } catch (error) {
     if (error instanceof Error) {
       console.error('Error downloading image: ', error.message)
@@ -61,20 +63,20 @@ watch(path, () => {
 
 <template>
   <div>
-    <NAvatar v-if="src" :src="src" size="large" alt="Avatar" />
-    <NAvatar v-else size="large" alt="Avatar">A</NAvatar>
+    <NAvatar v-if="src" :src="src" alt="Avatar" size="large" />
+    <NAvatar v-else alt="Avatar" size="large">A</NAvatar>
 
     <div>
       <label class="button primary block" for="single">
         {{ uploading ? 'Uploading ...' : 'Upload' }}
       </label>
       <input
+        id="single"
+        :disabled="uploading"
+        accept="image/*"
         style="visibility: hidden; position: absolute"
         type="file"
-        id="single"
-        accept="image/*"
         @change="uploadAvatar"
-        :disabled="uploading"
       />
     </div>
   </div>

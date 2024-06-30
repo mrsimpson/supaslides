@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { useUserSessionStore } from '@/stores/userSession'
 import { supabase } from '@/lib/supabase'
 import type { Acknowledgement, Presentation, PresentationEvent } from '@/types/entities'
-import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
+import type { PostgrestSingleResponse, RealtimePostgresChangesPayload } from '@supabase/supabase-js'
 import { upsertObjectInArray } from '@/lib/array'
 import type { RemovableRef } from '@vueuse/core'
 import { useStorage } from '@vueuse/core'
@@ -16,7 +16,7 @@ export interface PresenterState {
 }
 
 async function handleEventResponse<Database, SchemaName>(
-  response: PostgrestResponseSuccess<Acknowledgement> | PostgrestResponseFailure,
+  response: PostgrestSingleResponse<Acknowledgement>,
   presentationId: number
 ) {
   const { error, data: acknowledgment } = response
@@ -30,9 +30,11 @@ async function handleEventResponse<Database, SchemaName>(
       .select('*')
       .eq('id', acknowledgment.id)
       .single()
-    //TODO: Encrypt payload with joinCode
-    if (event && event.is_public) await realtime(supabase).sendEvent(presentationId, event)
-    return acknowledgment
+    if (!error) {
+      //TODO: Encrypt payload with joinCode
+      if (event && event.is_public) await realtime(supabase).sendEvent(presentationId, event)
+      return acknowledgment
+    }
   }
 }
 
@@ -101,9 +103,7 @@ export const usePresenterStore = defineStore('presenterStore', {
               this.myPresentations = upsertObjectInArray(this.myPresentations, payload.new, 'id')
               break
             case 'DELETE':
-              this.myPresentations = this.myPresentations = this.myPresentations.filter(
-                (p) => p.id !== payload.old.id
-              )
+              this.myPresentations = this.myPresentations.filter((p) => p.id !== payload.old.id)
               break
           }
         }
@@ -142,7 +142,8 @@ export const usePresenterStore = defineStore('presenterStore', {
             .eq('presentation', presentationId)
             .order('created_at', { ascending: false })
           if (presentationEvents) {
-            this.myPresentationEvents = presentationEvents
+            // @ts-ignore – PresentationEvent is potentially deep due to the generic value.
+            this.myPresentationEvents = presentationEvents as PresentationEvent[]
           }
           // set up reactivity for events of the current presentation
           const handlePresentationEvents = (
@@ -161,7 +162,7 @@ export const usePresenterStore = defineStore('presenterStore', {
                 break
               case 'DELETE':
                 this.myPresentationEvents = this.myPresentationEvents.filter(
-                  (event) => event.id !== payload.old.id
+                  (event: PresentationEvent) => event.id !== payload.old.id
                 )
                 break
             }

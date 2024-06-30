@@ -6,7 +6,7 @@
         <PresentationIcon
           v-else-if="['presentation_start', 'presentation_stop'].includes(event.type)"
         />
-        <AvatarIcon v-else :name="event.created_by_alias ?? undefined" />
+        <AvatarIcon v-else :name="event.value.created_by_alias ?? undefined" />
       </n-icon>
     </slot>
     <slot name="content">
@@ -22,7 +22,7 @@
       <div v-else>{{ getContent(event) }}</div>
     </slot>
     <div class="creation-info">
-      {{ event.created_by_alias }}, {{ new Date(event.created_at).toLocaleString() }}
+      {{ event.value.created_by_alias }}, {{ new Date(event.value.created_at).toLocaleString() }}
     </div>
   </div>
 </template>
@@ -36,10 +36,10 @@ import AvatarIcon from '@/components/AvatarIcon.vue'
 
 const { t } = useI18n()
 
-const props = defineProps({
-  event: { type: Object as () => PresentationEvent, required: true },
-  isMine: { type: Boolean, required: true }
-})
+const props = defineProps<{
+  event: PresentationEvent
+  isMine: boolean
+}>()
 
 interface CommentEventValue {
   commentText?: string
@@ -47,7 +47,7 @@ interface CommentEventValue {
 
 interface PresentationEvent {
   type: PresentationEventType
-  value: string | CommentEventValue | null
+  value: string | CommentEventValue | any | null
 }
 
 function getContent(event: PresentationEvent) {
@@ -91,7 +91,7 @@ function getContent(event: PresentationEvent) {
       }
       return reaction['emoticon']
     case 'user_joined':
-      return `${event.created_by_alias} ${t('user_joined')}`
+      return `${event.value.created_by_alias} ${t('user_joined')}`
     default:
       return t('some_strange_thing_happened_here')
   }
