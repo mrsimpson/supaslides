@@ -7,15 +7,15 @@
       :class="`list-item`"
       :style="{ flexDirection: isMyEvent(event) ? 'row-reverse' : 'row' }"
     >
-      <Event :event="event" :is-mine="isMyEvent(event)" />
+      <EventRenderer :event="event" :is-mine="isMyEvent(event)" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { PresentationEvent } from '@/types/entities'
-import Event from '@/components/Event.vue'
 import { computed, nextTick, ref, watch } from 'vue'
+import EventRenderer from '@/components/EventRenderer.vue'
 
 const props = defineProps({
   events: { type: Array as () => PresentationEvent[], required: true },
