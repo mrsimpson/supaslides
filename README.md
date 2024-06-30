@@ -33,6 +33,18 @@ Slideshow aims at bridging this gap between presenter and audience.
 - Copy the join code
 - Access `http://localhost:5173/join?code=<...>`
 
+## Design principles and responsibilities
+
+- The router is responsible for propagating data which the user of the app knows of (as path- or query params)
+- The router delegates to [views](./src/views). Views provide a context for a set of semantically connected user
+  interaction (such as all interactions in the context of a presenter). The view initializes all the necessary stores
+  and instantiates set of components for a particular process.
+- [Stores](./src/stores) are responsible for proxying all interaction to the backend. Thus, stores are the only places,
+  in which `supabase.js` is consumed. All manipulating operations to the state happen inside actions of the stores.
+- [Components](./src/components) are either
+    - "render components" which get all their data using `props`
+    - "rich components" which allow manipulation of the applications state through interactions with the stores.
+
 ## Status
 
 Big WIP. It's a side project of a father with two children. Expect not much progress.
