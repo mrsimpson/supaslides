@@ -6,7 +6,7 @@
         <PresentationIcon
           v-else-if="['presentation_start', 'presentation_stop'].includes(event.type)"
         />
-        <AvatarIcon v-else :name="event.value.created_by_alias ?? undefined" />
+        <AvatarIcon v-else :name="event.created_by_alias ?? undefined" />
       </n-icon>
     </slot>
     <slot name="content">
@@ -22,13 +22,14 @@
       <div v-else>{{ getContent(event) }}</div>
     </slot>
     <div class="creation-info">
-      {{ event.value.created_by_alias }}, {{ new Date(event.value.created_at).toLocaleString() }}
+      <span v-if="event.created_by_alias">{{ event.created_by_alias }}, </span>
+      {{ new Date(event.created_at).toLocaleString() }}
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { PresentationEventType } from '@/types/entities'
+import type { PresentationEvent, SpecificPresentationEvent } from '@/types/entities'
 import { useI18n } from 'vue-i18n'
 import { PresentationFile as PresentationIcon, UserAvatar as UserIcon } from '@vicons/carbon'
 import SpeechBubble from '@/components/SpeechBubble.vue'
@@ -40,15 +41,6 @@ const props = defineProps<{
   event: PresentationEvent
   isMine: boolean
 }>()
-
-interface CommentEventValue {
-  commentText?: string
-}
-
-interface PresentationEvent {
-  type: PresentationEventType
-  value: string | CommentEventValue | any | null
-}
 
 function getContent(event: PresentationEvent) {
   // noinspection FallThroughInSwitchStatementJS
@@ -62,13 +54,13 @@ function getContent(event: PresentationEvent) {
               return commentValue?.commentText ?? undefined
             }
           } else if (typeof event.value === 'object') {
-            return event.value.commentText
+            return (event as unknown as SpecificPresentationEvent<'comment'>).value.commentText
           }
         } catch (e) {
           // do nothing, just return the raw data
         }
         if (typeof event.value === 'object') {
-          return event.value.commentText
+          return (event as unknown as SpecificPresentationEvent<'comment'>).value.commentText
         }
       }
     case 'slide_change':
@@ -91,7 +83,7 @@ function getContent(event: PresentationEvent) {
       }
       return reaction['emoticon']
     case 'user_joined':
-      return `${event.value.created_by_alias} ${t('user_joined')}`
+      return `${event.created_by_alias} ${t('user_joined')}`
     default:
       return t('some_strange_thing_happened_here')
   }
