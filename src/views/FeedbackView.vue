@@ -40,6 +40,8 @@ const { currentPresentationId, currentPresentation, myEvents, publicEvents } =
   storeToRefs(useAudienceStore())
 const { t } = useI18n()
 
+useAudienceStore().initialize()
+
 function currentPresentationEvents(): PresentationEvent[] {
   return [
     ...(myEvents.value || []).filter((event) => event.presentation === currentPresentationId.value),
