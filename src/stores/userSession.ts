@@ -16,11 +16,11 @@ export interface UserSessionState {
 export const useUserSessionStore = defineStore('userSessionStore', {
   state: () =>
     ({
-      session: null,
+      initialized: false,
       anonUuid: useStorage('pinia/userSession/anonUuid', uuid()),
+      session: null,
       displayName: useStorage('pinia/userSession/displayName', ''),
       menuCollapsed: useStorage('pinia/userSession/menuCollapsed', false),
-      initialized: false
     }) as UserSessionState,
   getters: {
     isSignedIn: (state) => !!state.session
