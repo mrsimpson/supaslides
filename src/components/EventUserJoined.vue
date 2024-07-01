@@ -4,17 +4,18 @@
       <UserIcon />
     </template>
     <template #content>
-      <span>{{ t('user_joined') }}</span>
+      <span>{{ displayName }} {{ t('user_joined') }}</span>
     </template>
   </EventWithIconWrapper>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { PresentationEvent } from '@/types/entities.js'
 import { UserAvatar as UserIcon } from '@vicons/carbon'
 import EventWithIconWrapper from '@/components/EventWithIconWrapper.vue'
+import { getAuthorDisplayName } from '@/lib/event'
 
 const props = defineProps<{
   event: PresentationEvent
@@ -23,4 +24,10 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const event = ref(props.event)
+
+let displayName = ref<string | undefined>(undefined)
+
+onMounted(async () => {
+  displayName.value = await getAuthorDisplayName(props.event)
+})
 </script>

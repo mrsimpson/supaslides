@@ -62,7 +62,6 @@ const tailCustomStyle = computed(() => {
   position: relative;
   border-radius: 5px;
   padding: 15px;
-  width: 200px;
 }
 
 .speech-bubble-tail {

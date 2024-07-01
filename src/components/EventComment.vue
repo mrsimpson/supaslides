@@ -1,7 +1,7 @@
 <template>
   <EventWithIconWrapper :is-mine="isMine">
     <template #icon>
-      <AvatarIcon />
+      <AvatarIcon :name="displayName" />
     </template>
     <template #content>
       <SpeechBubble :callout-position="isMine ? 'right' : 'left'">
@@ -12,17 +12,24 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { SpecificPresentationEvent } from '@/types/entities.js'
 import AvatarIcon from '@/components/AvatarIcon.vue'
 import SpeechBubble from '@/components/SpeechBubble.vue'
 import EventWithIconWrapper from '@/components/EventWithIconWrapper.vue'
+import { getAuthorDisplayName } from '@/lib/event'
 
 const props = defineProps<{
   event: SpecificPresentationEvent<'comment'>
   isMine: boolean
 }>()
+
+let displayName = ref<string | undefined>(undefined)
+
+onMounted(async () => {
+  displayName.value = await getAuthorDisplayName(props.event)
+})
 
 const { t } = useI18n()
 const event = ref(props.event)

@@ -18,7 +18,7 @@ type ReactionValue = {
 }
 
 export type SpecificPresentationEvent<T extends PresentationEventType> = T extends 'comment'
-  ? Omit<Event, 'value'> & { value: CommentValue }
+  ? Omit<PresentationEvent, 'value'> & { value: CommentValue }
   : T extends 'reaction'
-    ? Omit<Event, 'value'> & { value: ReactionValue }
+    ? Omit<PresentationEvent, 'value'> & { value: ReactionValue }
     : Event

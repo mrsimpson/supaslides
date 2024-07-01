@@ -1,7 +1,7 @@
 <template>
   <EventWithIconWrapper :is-mine="isMine">
     <template #icon>
-      <AvatarIcon />
+      <AvatarIcon :name="displayName" />
     </template>
     <template #content>
       <span class="emoticon">{{ event.value.emoticon }}</span>
@@ -10,11 +10,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { SpecificPresentationEvent } from '@/types/entities.js'
 import AvatarIcon from '@/components/AvatarIcon.vue'
 import EventWithIconWrapper from '@/components/EventWithIconWrapper.vue'
+import { getAuthorDisplayName } from '@/lib/event'
 
 const props = defineProps<{
   event: SpecificPresentationEvent<'reaction'>
@@ -23,6 +24,11 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const event = ref(props.event)
+let displayName = ref<string | undefined>(undefined)
+
+onMounted(async () => {
+  displayName.value = await getAuthorDisplayName(props.event)
+})
 </script>
 
 <style>
