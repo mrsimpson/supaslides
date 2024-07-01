@@ -25,8 +25,9 @@ Slideshow aims at bridging this gap between presenter and audience.
 ## Getting started
 
 - checkout this repo
-- update environment variables in `.env` to reflect your supabase configuration.
-- checkout the [backend](https://github.com/mrsimpson/slideshow-backend) (there are no mocks yet)
+- checkout the [backend](https://github.com/mrsimpson/slideshow-backend) (there are no mocks yet). See the repo how to
+  start it.
+- Copy [`.env.template`](./.env.template) to `.env.local` and provide your supabase credentials
 - `npm i && npm run dev`
 - http://localhost:5173/
 - Create a user (using the backend)
@@ -43,8 +44,8 @@ Slideshow aims at bridging this gap between presenter and audience.
 - [Stores](./src/stores) are responsible for proxying all interaction to the backend. Thus, stores are the only places,
   in which `supabase.js` is consumed. All manipulating operations to the state happen inside actions of the stores.
 - [Components](./src/components) are either
-  - "render components" which get all their data using `props`
-  - "rich components" which allow manipulation of the applications state through interactions with the stores.
+    - "render components" which get all their data using `props`
+    - "rich components" which allow manipulation of the applications state through interactions with the stores.
 
 ## Status
 

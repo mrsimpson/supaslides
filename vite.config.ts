@@ -9,7 +9,7 @@ import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 // Load environment variables from.env file
-dotenv.config({ path: ['.env.local', '.env'] })
+dotenv.config({ path: ['.env.template.local', '.env.template'] })
 
 // https://vitejs.dev/config/
 export default defineConfig({
