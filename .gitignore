@@ -32,5 +32,8 @@ coverage
 test-results/
 playwright-report/
 
+# the env file – use .env.local
+.env
+
 # local configuration
 .local
