@@ -1,5 +1,5 @@
 <template>
-  <EventWithIconWrapper>
+  <EventWithIconWrapper :is-mine="isMine">
     <template #icon>
       <UserIcon />
     </template>

@@ -1,10 +1,10 @@
 <template>
-  <EventWithIconWrapper>
+  <EventWithIconWrapper :is-mine="isMine">
     <template #icon>
       <AvatarIcon />
     </template>
     <template #content>
-      <SpeechBubble :callout-position="props.isMine ? 'right' : 'left'">
+      <SpeechBubble :callout-position="isMine ? 'right' : 'left'">
         <template #default> {{ event.value.commentText }}</template>
       </SpeechBubble>
     </template>
