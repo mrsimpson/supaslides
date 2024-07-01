@@ -1,6 +1,7 @@
 <template>
   <p v-if="!isEditMode">
-    {{ t('you_are_participating_as') }} <a @click="setEditMode">{{ displayName }}</a>
+    {{ t('you_are_participating_as') }}
+    <a :style="{ color: theme.actionColor }" @click="setEditMode">{{ displayName }}</a>
   </p>
   <n-form
     v-else
@@ -37,7 +38,7 @@
 import { useUserSessionStore } from '@/stores/userSession'
 import { CheckmarkOutline } from '@vicons/carbon'
 import { onMounted, ref } from 'vue'
-import { type FormInst } from 'naive-ui'
+import { type FormInst, useThemeVars } from 'naive-ui'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 
@@ -55,6 +56,7 @@ const { displayName } = storeToRefs(useUserSessionStore())
 const { setDisplayName } = useUserSessionStore()
 
 const isEditMode = ref(false)
+const theme = useThemeVars()
 
 onMounted(async () => {
   if (!displayName.value) {
