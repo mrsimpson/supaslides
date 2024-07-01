@@ -8,6 +8,7 @@
           :show-open="false"
         />
       </NCard>
+      <BroadcastForm :presentation="presentation" />
       <PresentationEventsTimeline
         :events="myPresentationEvents"
         :my-anon-uuid="anonUuid"
@@ -28,6 +29,7 @@ import PresentationEventsTimeline from '@/components/PresentationEventsTimeline.
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import type { Presentation } from '@/types/entities'
+import BroadcastForm from '@/components/BroadcastForm.vue'
 
 const { isSignedIn, anonUuid, session } = storeToRefs(useUserSessionStore())
 

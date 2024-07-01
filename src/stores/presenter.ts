@@ -15,7 +15,7 @@ export interface PresenterState {
   myPresentationEvents: PresentationEvent[]
 }
 
-async function handleEventResponse<Database, SchemaName>(
+async function handleAcknowledgement<Database, SchemaName>(
   response: PostgrestSingleResponse<Acknowledgement>,
   presentationId: number
 ) {
@@ -75,13 +75,33 @@ export const usePresenterStore = defineStore('presenterStore', {
     async startPresentation(presentationId: Presentation['id']) {
       const response = await supabase.rpc('presentation_start', { n_presentation: presentationId })
       this.currentPresentationId = presentationId
-      return handleEventResponse(response, presentationId)
+      return handleAcknowledgement(response, presentationId)
     },
     async stopPresentation(presentationId: Presentation['id']) {
       const response = await supabase.rpc('presentation_stop', { n_presentation: presentationId })
       this.currentPresentationId = 0
-      return handleEventResponse(response, presentationId)
+      return handleAcknowledgement(response, presentationId)
     },
+    async broadcast(presentationId: Presentation['id'], message: string) {
+      const { error, data } = await supabase
+        .from('presentation_events')
+        .insert([
+          {
+            presentation: presentationId,
+            is_public: true,
+            type: 'comment',
+            value: { commentText: message }
+          }
+        ])
+        .select()
+      if (error) {
+        console.error(error)
+      } else if (data) {
+        const event = data[0]
+        if (event) await realtime(supabase).sendEvent(presentationId, event)
+      }
+    },
+
     async syncMyPresentations() {
       const { session } = useUserSessionStore()
       if (session?.user.id) {

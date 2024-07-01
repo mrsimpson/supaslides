@@ -10,6 +10,7 @@ declare module 'vue' {
     Account: typeof import('./src/components/Account.vue')['default']
     Avatar: typeof import('./src/components/Avatar.vue')['default']
     AvatarIcon: typeof import('./src/components/AvatarIcon.vue')['default']
+    BroadcastForm: typeof import('./src/components/BroadcastForm.vue')['default']
     CommentForm: typeof import('./src/components/CommentForm.vue')['default']
     DisplayNameForm: typeof import('./src/components/DisplayNameForm.vue')['default']
     EmojiReaction: typeof import('./src/components/EmojiReaction.vue')['default']

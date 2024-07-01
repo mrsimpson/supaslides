@@ -1,6 +1,7 @@
 {
   "account": "Account",
   "an_untitled_presentation": "an untitled presentation",
+  "broadcast_placeholder": "Send a broadcast message",
   "comment_debounced_error": "You're too fast ;)",
   "comment_placeholder": "Send a comment to the presenter",
   "comment_sent_success": "Sent",
