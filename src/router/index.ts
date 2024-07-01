@@ -14,39 +14,46 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HelloWorld,
-      props: { msg: '🏠' }
+      props: { msg: '🏠' },
+      meta: { needsAuth: true }
     },
     {
       path: '/intro',
       name: 'intro',
-      component: IntroView
+      component: IntroView,
+      meta: { needsAuth: false }
     },
     { path: '/join', name: 'join', component: JoinView },
     {
       path: '/feedback',
       name: 'feedback',
-      component: FeedbackView
+      component: FeedbackView,
+      meta: { needsAuth: false }
     },
     {
       path: '/presentations/:presentationId',
       name: 'presentation',
-      component: PresenterView
+      component: PresenterView,
+      meta: { needsAuth: true }
     },
     {
       path: '/presentations',
       name: 'presentations',
-      component: PresenterView
+      component: PresenterView,
+      meta: { needsAuth: true }
     },
     { path: '/me', name: 'me', component: AccountView },
     {
       path: '/imprint',
       name: 'imprint',
-      component: () => import('@/views/ImprintView.vue')
+      component: () => import('@/views/ImprintView.vue'),
+      meta: { needsAuth: false }
     },
     {
       path: '/data-protection',
       name: 'data-protection',
-      component: () => import('@/views/DataProtectionView.vue')
+      component: () => import('@/views/DataProtectionView.vue'),
+      meta: { needsAuth: false }
     }
   ]
 })
