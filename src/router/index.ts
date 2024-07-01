@@ -2,10 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import IntroView from '@/views/IntroView.vue'
 import HelloWorld from '@/components/HelloWorld.vue'
 import { useUserSessionStore } from '@/stores/userSession'
-import AccountView from '@/views/ProfileView.vue'
-import PresenterView from '@/views/PresenterView.vue'
-import JoinView from '@/views/JoinView.vue'
-import FeedbackView from '@/views/FeedbackView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,26 +19,26 @@ const router = createRouter({
       component: IntroView,
       meta: { needsAuth: false }
     },
-    { path: '/join', name: 'join', component: JoinView },
+    { path: '/join', name: 'join', component: import('@/views/JoinView.vue') },
     {
       path: '/feedback',
       name: 'feedback',
-      component: FeedbackView,
+      component: () => import('@/views/FeedbackView.vue'),
       meta: { needsAuth: false }
     },
     {
       path: '/presentations/:presentationId',
       name: 'presentation',
-      component: PresenterView,
+      component: () => import('@/views/PresenterView.vue'),
       meta: { needsAuth: true }
     },
     {
       path: '/presentations',
       name: 'presentations',
-      component: PresenterView,
+      component: () => import('@/views/PresenterView.vue'),
       meta: { needsAuth: true }
     },
-    { path: '/me', name: 'me', component: AccountView },
+    { path: '/me', name: 'me', component: import('@/views/ProfileView.vue') },
     {
       path: '/imprint',
       name: 'imprint',
