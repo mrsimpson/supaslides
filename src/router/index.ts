@@ -15,7 +15,7 @@ const router = createRouter({
       name: 'home',
       component: HelloWorld,
       props: { msg: '🏠' },
-      meta: { needsAuth: true }
+      meta: { needsAuth: false }
     },
     {
       path: '/intro',
