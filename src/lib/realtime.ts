@@ -17,7 +17,7 @@ export default function (supabase: SupabaseClient) {
         event: 'presentation_event',
         payload: event
       }),
-    onPresentationEvent: async (
+    onPresentationEvent: (
       presentationId: Presentation['id'],
       callback: (event: PresentationEvent) => void
     ) => {

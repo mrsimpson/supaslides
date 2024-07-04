@@ -38,7 +38,7 @@ const router = createRouter({
       component: () => import('@/views/PresenterView.vue'),
       meta: { needsAuth: true }
     },
-    { path: '/me', name: 'me', component: import('@/views/ProfileView.vue') },
+    { path: '/me', name: 'me', component: () => import('@/views/ProfileView.vue') },
     {
       path: '/imprint',
       name: 'imprint',
@@ -55,10 +55,10 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const userSession = useUserSessionStore()
+  const { isSignedIn } = useUserSessionStore()
 
   if (to?.meta.needsAuth) {
-    if (userSession.session) {
+    if (isSignedIn) {
       return next()
     } else {
       return next('/me')

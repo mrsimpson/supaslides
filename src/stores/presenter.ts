@@ -1,39 +1,37 @@
 import { defineStore } from 'pinia'
 import { useUserSessionStore } from '@/stores/userSession'
-import { supabase } from '@/lib/supabase'
-import type { Acknowledgement, Presentation, PresentationEvent } from '@/types/entities'
-import type { PostgrestSingleResponse, RealtimePostgresChangesPayload } from '@supabase/supabase-js'
+import type { Backend } from '@/api/Backend'
+import { createBackend } from '@/api/supabaseBackend'
+import type {
+  Acknowledgement,
+  Presentation,
+  PresentationChange,
+  PresentationEvent
+} from '@/types/entities'
 import { upsertObjectInArray } from '@/lib/array'
 import type { RemovableRef } from '@vueuse/core'
 import { useStorage } from '@vueuse/core'
-import realtime from '@/lib/realtime'
+
+const backend: Backend = createBackend()
 
 export interface PresenterState {
-  isInitialized: Boolean
+  isInitialized: boolean
   currentPresentationId: RemovableRef<Presentation['id']>
   myPresentations: Presentation[]
   myPresentationEvents: PresentationEvent[]
 }
 
 async function handleAcknowledgement<Database, SchemaName>(
-  response: PostgrestSingleResponse<Acknowledgement>,
+  acknowledgment: Acknowledgement,
   presentationId: number
 ) {
-  const { error, data: acknowledgment } = response
-  if (error) {
-    console.error(error)
-    throw error
-  }
   if (acknowledgment && acknowledgment.id) {
-    const { data: event, error } = await supabase
-      .from('presentation_events')
-      .select('*')
-      .eq('id', acknowledgment.id)
-      .single()
-    if (!error) {
-      //TODO: Encrypt payload with joinCode
-      if (event && event.is_public) await realtime(supabase).sendEvent(presentationId, event)
-      return acknowledgment
+    if (acknowledgment.entity === 'presentation_events') {
+      const event = await backend.fetchEventById(acknowledgment.id)
+      if (event) {
+        //TODO: Encrypt payload with joinCode
+        if (event && event.is_public) await backend.notifyAudience(presentationId, event)
+      }
     }
   }
 }
@@ -49,13 +47,13 @@ export const usePresenterStore = defineStore('presenterStore', {
   getters: {
     currentPresentation: (state) => {
       return state.currentPresentationId
-        ? state.myPresentations.filter((p) => p.id === state.currentPresentationId)[0]
+        ? state.myPresentations.find((p) => p.id === state.currentPresentationId)
         : null
     },
     nonCurrentPresentations: (state) => {
       return state.currentPresentationId
         ? state.myPresentations.filter((p) => p.id !== state.currentPresentationId)
-        : state.myPresentations
+        : []
     }
   },
   actions: {
@@ -73,48 +71,24 @@ export const usePresenterStore = defineStore('presenterStore', {
       this.syncPresentationEvents(presentationId).then(() => console.log('Events synced'))
     },
     async startPresentation(presentationId: Presentation['id']) {
-      const response = await supabase.rpc('presentation_start', { n_presentation: presentationId })
-      this.currentPresentationId = presentationId
-      return handleAcknowledgement(response, presentationId)
+      const acknowledgment = await backend.startPresentation(presentationId)
+      return handleAcknowledgement(acknowledgment, presentationId)
     },
     async stopPresentation(presentationId: Presentation['id']) {
-      const response = await supabase.rpc('presentation_stop', { n_presentation: presentationId })
-      this.currentPresentationId = 0
-      return handleAcknowledgement(response, presentationId)
+      const acknowledgment = await backend.stopPresentation(presentationId)
+      return handleAcknowledgement(acknowledgment, presentationId)
     },
     async broadcast(presentationId: Presentation['id'], message: string) {
-      const { error, data } = await supabase
-        .from('presentation_events')
-        .insert([
-          {
-            presentation: presentationId,
-            is_public: true,
-            type: 'comment',
-            value: { commentText: message }
-          }
-        ])
-        .select()
-      if (error) {
-        console.error(error)
-      } else if (data) {
-        const event = data[0]
-        if (event) await realtime(supabase).sendEvent(presentationId, event)
-      }
+      await backend.createBroadcastMessage(presentationId, message)
     },
 
     async syncMyPresentations() {
       const { session } = useUserSessionStore()
       if (session?.user.id) {
-        const presentations = await supabase
-          .from('presentations')
-          .select()
-          .eq('presenter', session.user.id)
-        this.myPresentations = presentations.data || []
+        this.myPresentations = await backend.fetchPresentationsOfUser(session.user.id)
 
         // set up reactivity
-        const handlePresentationChanges = (
-          payload: RealtimePostgresChangesPayload<Presentation>
-        ) => {
+        const handlePresentationChanges = (payload: PresentationChange) => {
           switch (payload.eventType) {
             case 'INSERT':
               this.myPresentations.push(payload.new)
@@ -127,79 +101,29 @@ export const usePresenterStore = defineStore('presenterStore', {
               break
           }
         }
-
-        supabase
-          .channel('presentations')
-          .on(
-            'postgres_changes',
-            {
-              event: '*',
-              schema: 'public',
-              table: 'presentations',
-              filter: `presenter=eq.${session.user.id}`
-            },
-            handlePresentationChanges
-          )
-          .subscribe()
+        backend.listenToPresentationChanges(session.user.id, handlePresentationChanges)
       }
     },
     async syncPresentationEvents(presentationId: Presentation['id']) {
       const { session } = useUserSessionStore()
       if (session && presentationId) {
-        const { data: presentation, error } = await supabase
-          .from('presentations')
-          .select()
-          .eq('presenter', session.user.id)
-          .eq('id', presentationId)
-          .single()
-        if (error) {
+        const presentation = await backend.fetchPresentationById(presentationId)
+        if (!presentation) {
           console.error('Presentation', presentationId, 'was not found with this presenter')
           return
-        } else if (presentation) {
-          const { data: presentationEvents } = await supabase
-            .from('presentation_events')
-            .select()
-            .eq('presentation', presentationId)
-            .order('created_at', { ascending: false })
+        } else {
+          const presentationEvents = await backend.fetchPresentationEvents(presentationId)
+
           if (presentationEvents) {
             // @ts-ignore – PresentationEvent is potentially deep due to the generic value.
-            this.myPresentationEvents = presentationEvents as PresentationEvent[]
+            this.myPresentationEvents = presentationEvents
           }
+
           // set up reactivity for events of the current presentation
-          const handlePresentationEvents = (
-            payload: RealtimePostgresChangesPayload<PresentationEvent>
-          ) => {
-            switch (payload.eventType) {
-              case 'INSERT':
-                this.myPresentationEvents.push(payload.new)
-                break
-              case 'UPDATE':
-                this.myPresentationEvents = upsertObjectInArray(
-                  this.myPresentationEvents,
-                  payload.new,
-                  'id'
-                )
-                break
-              case 'DELETE':
-                this.myPresentationEvents = this.myPresentationEvents.filter(
-                  (event: PresentationEvent) => event.id !== payload.old.id
-                )
-                break
-            }
+          const handlePresentationEvents = (event: PresentationEvent) => {
+            this.myPresentationEvents.push(event)
           }
-          supabase
-            .channel('presentation_events')
-            .on(
-              'postgres_changes',
-              {
-                event: '*',
-                schema: 'public',
-                table: 'presentation_events',
-                filter: `presentation=eq.${presentationId}`
-              },
-              handlePresentationEvents
-            )
-            .subscribe()
+          backend.listenToPresentationEvents(presentationId, handlePresentationEvents)
         }
       }
     }

@@ -57,8 +57,8 @@ watch(
   { immediate: true }
 )
 
-watch([presentationId(), myPresentations], async () => {
-  if (presentationId()) {
+watch([presentationId, myPresentations], async () => {
+  if (presentationId) {
     presenterStore.setActivePresentation(presentationId())
     presentation.value = myPresentations.value.filter((p) => p.id === presentationId())[0]
   }
