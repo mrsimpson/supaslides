@@ -1,8 +1,13 @@
 {
-  "name": "@slidevshow/frontend",
+  "name": "@slidevshow/api",
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "main": "dist/slidevshow-api.umd.js",
+  "module": "dist/slidevshow-api.es.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "build-only": "vite build",

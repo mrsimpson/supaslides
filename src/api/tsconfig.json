@@ -1,8 +1,8 @@
 {
   "extends": "@tsconfig/node20/tsconfig.json",
   "include": [
-    "./*.ts",
-    "./*.d.ts",
+    "**/*.ts",
+    "**/*.d.ts",
     "env.d.ts"
   ],
   "exclude": [
@@ -12,11 +12,9 @@
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "dist/types",
-    "emitDeclarationOnly": true,
     "outDir": "dist",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
     "types": [
       "node"
     ],
