@@ -15,7 +15,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { PresentationEvent } from '@/types/entities.js'
+import type { PresentationEvent } from 'src/api/types/entities.js'
 import { PresentationFile as PresentationIcon } from '@vicons/carbon'
 import EventWithIconWrapper from '@/components/EventWithIconWrapper.vue'
 

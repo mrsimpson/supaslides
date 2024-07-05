@@ -115,7 +115,7 @@
 import { defineProps, ref } from 'vue'
 import { NButton, NButtonGroup, NFlex, NIcon, NModal, NQrCode, NSpace, NThing } from 'naive-ui'
 import slug from '@/lib/slug'
-import type { Presentation } from '@/types/entities'
+import type { Presentation } from 'src/api/types/entities'
 import { usePresenterStore } from '@/stores/presenter'
 import { Code, Play, QrCode, Stop } from '@vicons/carbon'
 import { useRouter } from 'vue-router'

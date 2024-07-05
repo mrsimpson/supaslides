@@ -6,7 +6,7 @@ import type {
   Presentation,
   PresentationEvent,
   PresentationPeek
-} from '@/types/entities'
+} from 'src/api/types/entities'
 import type { RemovableRef } from '@vueuse/core'
 import { useStorage } from '@vueuse/core'
 import { useUserSessionStore } from '@/stores/userSession'

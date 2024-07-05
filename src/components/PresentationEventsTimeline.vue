@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { PresentationEvent } from '@/types/entities'
+import type { PresentationEvent } from 'src/api/types/entities'
 import { computed, nextTick, onMounted, type PropType, ref, watch } from 'vue'
 import EventRenderer from '@/components/EventRenderer.vue'
 import Sorting from '@/types/Sorting'

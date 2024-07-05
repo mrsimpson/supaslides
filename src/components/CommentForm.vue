@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { PresentationPeek } from '@/types/entities'
+import type { PresentationPeek } from 'src/api/types/entities'
 import { ref } from 'vue'
 import { type FormInst, useMessage } from 'naive-ui'
 import { useI18n } from 'vue-i18n'

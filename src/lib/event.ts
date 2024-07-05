@@ -1,4 +1,4 @@
-import type { PresentationEvent } from '@/types/entities'
+import type { PresentationEvent } from 'src/api/types/entities'
 import { supabase } from '@/lib/supabase'
 
 export async function getAuthorDisplayName(event: PresentationEvent) {

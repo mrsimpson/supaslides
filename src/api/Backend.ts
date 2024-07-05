@@ -39,7 +39,12 @@ export interface Backend {
 
   listenToPresentationChanges(userId: string, callback: (change: PresentationChange) => void): void
 
-  joinPresentation(joinCode: string): Promise<PresentationPeek | undefined>
+  joinPresentation(
+    joinCode: string,
+    displayName: string,
+    userId?: string,
+    anonUuid?: string
+  ): Promise<PresentationPeek | undefined>
 
   registerAuthCallback(callback: (event: string, session: any) => void): void
 }

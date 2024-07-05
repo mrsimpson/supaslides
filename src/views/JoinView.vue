@@ -19,7 +19,7 @@ import { NButton, NCard, NSpace } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '@/lib/supabase'
-import type { PresentationPeek } from '@/types/entities'
+import type { PresentationPeek } from 'src/api/types/entities'
 import { useAudienceStore } from '@/stores/audience'
 import { useUserSessionStore } from '@/stores/userSession'
 import { storeToRefs } from 'pinia'
@@ -29,6 +29,7 @@ const router = useRouter()
 const joinCode = router.currentRoute.value?.query['code']?.toString()
 const presenterName = router.currentRoute.value?.query['presenter']
 const presentation = ref(null as PresentationPeek | null)
+const backend = createBac
 
 const { displayName } = storeToRefs(useUserSessionStore())
 

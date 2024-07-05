@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { PresentationEvent } from '@/types/entities.js'
+import type { PresentationEvent } from 'src/api/types/entities.js'
 import { UserAvatar as UserIcon } from '@vicons/carbon'
 import EventWithIconWrapper from '@/components/EventWithIconWrapper.vue'
 import { getAuthorDisplayName } from '@/lib/event'

@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Presentation } from '@/types/entities.js'
+import type { Presentation } from 'src/api/types/entities.js'
 import { usePresenterStore } from '@/stores/presenter'
 import { NButton, NIcon, NListItem } from 'naive-ui'
 import { CheckmarkOutline } from '@vicons/carbon'

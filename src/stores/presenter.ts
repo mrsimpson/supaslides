@@ -7,7 +7,7 @@ import type {
   Presentation,
   PresentationChange,
   PresentationEvent
-} from '@/types/entities'
+} from 'src/api/types/entities'
 import { upsertObjectInArray } from '@/lib/array'
 import type { RemovableRef } from '@vueuse/core'
 import { useStorage } from '@vueuse/core'
