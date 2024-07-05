@@ -11,7 +11,7 @@
 <script lang="ts" setup>
 import { computed, ref, type StyleValue } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { PresentationEvent, PresentationEventType } from '@/types/entities'
+import type { PresentationEvent, PresentationEventType } from 'src/api/types/entities'
 import EventUserJoined from '@/components/EventUserJoined.vue'
 import EventPresentationStartStop from '@/components/EventPresentationStartStop.vue'
 import EventComment from '@/components/EventComment.vue'

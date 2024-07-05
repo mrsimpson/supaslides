@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 import { NFlex } from 'naive-ui'
 import EmojiReaction from '@/components/EmojiReaction.vue'
-import type { PresentationPeek } from '@/types/entities'
+import type { PresentationPeek } from 'src/api/types/entities'
 
 const props = defineProps({
   presentation: { type: Object as () => PresentationPeek, required: false }

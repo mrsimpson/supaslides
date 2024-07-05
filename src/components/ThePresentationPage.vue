@@ -28,7 +28,7 @@ import { useUserSessionStore } from '@/stores/userSession'
 import PresentationEventsTimeline from '@/components/PresentationEventsTimeline.vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import type { Presentation } from '@/types/entities'
+import type { Presentation } from 'src/api/types/entities'
 import BroadcastForm from '@/components/BroadcastForm.vue'
 
 const { isSignedIn, anonUuid, session } = storeToRefs(useUserSessionStore())

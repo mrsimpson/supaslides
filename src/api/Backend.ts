@@ -5,7 +5,7 @@ import type {
   PresentationChange,
   PresentationEvent,
   PresentationPeek
-} from '@/types/entities'
+} from './types/entities'
 
 export interface Backend {
   fetchPresentationById(presentationId: Presentation['id']): Promise<Presentation | null>
@@ -39,7 +39,12 @@ export interface Backend {
 
   listenToPresentationChanges(userId: string, callback: (change: PresentationChange) => void): void
 
-  joinPresentation(joinCode: string): Promise<PresentationPeek | undefined>
+  joinPresentation(
+    joinCode: string,
+    displayName: string,
+    userId?: string,
+    anonUuid?: string
+  ): Promise<PresentationPeek | undefined>
 
   registerAuthCallback(callback: (event: string, session: any) => void): void
 }

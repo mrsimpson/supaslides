@@ -5,8 +5,8 @@ import type {
   PresentationChange,
   PresentationEvent,
   PresentationPeek
-} from '@/types/entities'
-import type { Database } from '@/types/database'
+} from './types/entities'
+import type { Database } from './types/database'
 import {
   createClient,
   type PostgrestError,
@@ -15,8 +15,6 @@ import {
   type RealtimePostgresChangesPayload,
   type SupabaseClient
 } from '@supabase/supabase-js'
-import { supabase } from '@/lib/supabase'
-import { useUserSessionStore } from '@/stores/userSession'
 
 class SupabaseBackend implements Backend {
   private client: SupabaseClient
@@ -79,19 +77,23 @@ class SupabaseBackend implements Backend {
       .subscribe()
   }
 
-  async joinPresentation(joinCode: string): Promise<PresentationPeek | undefined> {
+  async joinPresentation(
+    joinCode: string,
+    displayName: string,
+    userId?: string,
+    anonUuid?: string
+  ): Promise<PresentationPeek | undefined> {
     if (!joinCode) {
       throw new Error('No join code provided')
     }
-    const { displayName, session, anonUuid } = useUserSessionStore()
-    const { data: presentationPeek } = await supabase.rpc('presentation_peek', {
+    const { data: presentationPeek } = await this.client.rpc('presentation_peek', {
       t_join_code: joinCode
     })
     if (presentationPeek) {
-      const { error } = await supabase.rpc('join_presentation', {
+      const { error } = await this.client.rpc('join_presentation', {
         t_join_code: joinCode,
         t_user_alias: displayName,
-        u_user_uuid: session?.user.id,
+        u_user_uuid: userId,
         u_user_anon_uuid: anonUuid
       })
       this.handlePostgrestError(error)
@@ -152,7 +154,7 @@ class SupabaseBackend implements Backend {
   ): Promise<PresentationEvent | null> {
     const newEvent = event as PresentationEvent
     newEvent.presentation = presentationId
-    const { error } = await supabase.from('presentation_events').insert(newEvent)
+    const { error } = await this.client.from('presentation_events').insert(newEvent)
 
     this.handlePostgrestError(error)
     return newEvent
