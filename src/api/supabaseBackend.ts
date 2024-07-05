@@ -7,8 +7,14 @@ import type {
   PresentationPeek
 } from '@/types/entities'
 import type { Database } from '@/types/database'
-import realtime from '@/lib/realtime'
-import { createClient, type PostgrestError, type SupabaseClient } from '@supabase/supabase-js'
+import {
+  createClient,
+  type PostgrestError,
+  REALTIME_LISTEN_TYPES,
+  REALTIME_SUBSCRIBE_STATES,
+  type RealtimePostgresChangesPayload,
+  type SupabaseClient
+} from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { useUserSessionStore } from '@/stores/userSession'
 
@@ -23,7 +29,38 @@ class SupabaseBackend implements Backend {
     presentationId: Presentation['id'],
     callback: (event: PresentationEvent) => void
   ): void {
-    realtime(this.client).onPresentationEvent(presentationId, callback)
+    this.client
+      .channel('presentation_events')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'presentation_events',
+          filter: `presentation=eq.${presentationId}`
+        },
+        (payload: RealtimePostgresChangesPayload<PresentationEvent>) =>
+          callback(<PresentationEvent>payload.new)
+      )
+      .subscribe()
+    const presentationBroadcastChannel = this.client.channel(
+      this.getRealtimeChannelName(presentationId)
+    )
+    presentationBroadcastChannel.subscribe((status) => {
+      if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
+        presentationBroadcastChannel.on(
+          REALTIME_LISTEN_TYPES.BROADCAST,
+          { event: 'presentation_event' },
+          (event) => {
+            if (event) {
+              callback(event.payload)
+            }
+          }
+        )
+      } else {
+        //TODO: Error handling
+      }
+    })
   }
 
   listenToPresentationChanges(userId: string, callback: (change: PresentationChange) => void) {
@@ -141,7 +178,7 @@ class SupabaseBackend implements Backend {
     } else if (data) {
       const event = data[0]
       if (event) {
-        await realtime(this.client).sendEvent(presentationId, event)
+        await this.sendRealtimeEvent(presentationId, event)
         return event
       }
     }
@@ -165,7 +202,19 @@ class SupabaseBackend implements Backend {
     presentationId: Presentation['id'],
     event: PresentationEvent
   ): Promise<void> {
-    await realtime(supabase).sendEvent(presentationId, event)
+    await this.sendRealtimeEvent(presentationId, event)
+  }
+
+  private getRealtimeChannelName(presentationId: Presentation['id']) {
+    return `presentation-${presentationId}`
+  }
+
+  private async sendRealtimeEvent(presentationId: Presentation['id'], event: PresentationEvent) {
+    await this.client.channel(this.getRealtimeChannelName(presentationId)).send({
+      type: REALTIME_LISTEN_TYPES.BROADCAST,
+      event: 'presentation_event',
+      payload: event
+    })
   }
 
   private handlePostgrestError(error: PostgrestError | null) {

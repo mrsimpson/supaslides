@@ -62,7 +62,7 @@ export const usePresenterStore = defineStore('presenterStore', {
       // this can only be initialized once the user has logged in
       if (session?.user.id) {
         await this.syncMyPresentations()
-        await this.syncPresentationEvents(this.currentPresentationId)
+        this.setActivePresentation(this.currentPresentationId)
         this.isInitialized = true
       }
     },
@@ -121,7 +121,10 @@ export const usePresenterStore = defineStore('presenterStore', {
 
           // set up reactivity for events of the current presentation
           const handlePresentationEvents = (event: PresentationEvent) => {
-            this.myPresentationEvents.push(event)
+            //we're effectively listening on public broadcasts and postgres updates, to we might get the presenter's own events twice
+            // @ts-ignore – PresentationEvent is potentially deep due to the generic value.
+            if (!this.myPresentationEvents.map((e) => e.id).includes(event.id))
+              this.myPresentationEvents.push(event)
           }
           backend.listenToPresentationEvents(presentationId, handlePresentationEvents)
         }

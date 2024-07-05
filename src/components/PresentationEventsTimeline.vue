@@ -14,28 +14,33 @@
 
 <script lang="ts" setup>
 import type { PresentationEvent } from '@/types/entities'
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, type PropType, ref, watch } from 'vue'
 import EventRenderer from '@/components/EventRenderer.vue'
+import Sorting from '@/types/Sorting'
 
 const props = defineProps({
   events: { type: Array as () => PresentationEvent[], required: true },
   myUserId: { type: String, required: false },
-  myAnonUuid: { type: String, required: false }
+  myAnonUuid: { type: String, required: false },
+  sorting: {
+    type: String as PropType<Sorting>,
+    default: Sorting.NewestTop,
+    validator: (value: string) => Object.values(Sorting).includes(value as Sorting)
+  }
 })
 
 const listContainer = ref<HTMLElement | null>(null)
 
-watch(
-  () => props.events,
-  async () => {
-    await nextTick()
-    const container = listContainer.value
-    if (container) {
-      container.scrollTop = container.scrollHeight
-    }
-  },
-  { deep: true }
-)
+async function scroll() {
+  await nextTick()
+  const container = listContainer.value
+  if (container) {
+    container.scrollTop = props.sorting === Sorting.NewestBottom ? container.scrollHeight : 0
+  }
+}
+
+onMounted(scroll)
+watch(() => props.events, scroll, { deep: true })
 
 function isMyEvent(event: PresentationEvent) {
   return event.created_by_anon_uuid === props.myAnonUuid || event.created_by === props.myUserId
@@ -43,7 +48,9 @@ function isMyEvent(event: PresentationEvent) {
 
 const sortedEvents = computed(() => {
   return [...props.events].sort(
-    (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    (a, b) =>
+      (new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) *
+      (props.sorting === Sorting.NewestBottom ? -1 : 1)
   )
 })
 </script>
@@ -51,7 +58,7 @@ const sortedEvents = computed(() => {
 <style scoped>
 .list-container {
   height: 300px; /* Adjust as needed */
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .list-item {

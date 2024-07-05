@@ -15,6 +15,7 @@
       :events="currentPresentationEvents()"
       :my-anon-uuid="anonUuid"
       :my-user-id="session?.user.id"
+      :sorting="Sorting.NewestBottom"
     />
     <div v-if="currentPresentation && displayName">
       <n-divider />
@@ -34,6 +35,7 @@ import type { PresentationEvent } from '@/types/entities'
 import { useI18n } from 'vue-i18n'
 import DisplayNameForm from '@/components/DisplayNameForm.vue'
 import CommentForm from '@/components/CommentForm.vue'
+import Sorting from '@/types/Sorting'
 
 const { anonUuid, session, displayName } = storeToRefs(useUserSessionStore())
 const { currentPresentationId, currentPresentation, myEvents, publicEvents } =
