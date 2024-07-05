@@ -29,7 +29,6 @@ const router = useRouter()
 const joinCode = router.currentRoute.value?.query['code']?.toString()
 const presenterName = router.currentRoute.value?.query['presenter']
 const presentation = ref(null as PresentationPeek | null)
-const backend = createBac
 
 const { displayName } = storeToRefs(useUserSessionStore())
 

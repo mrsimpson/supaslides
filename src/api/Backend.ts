@@ -5,7 +5,7 @@ import type {
   PresentationChange,
   PresentationEvent,
   PresentationPeek
-} from '@/types/entities'
+} from './types/entities'
 
 export interface Backend {
   fetchPresentationById(presentationId: Presentation['id']): Promise<Presentation | null>

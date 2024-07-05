@@ -5,8 +5,8 @@ import type {
   PresentationChange,
   PresentationEvent,
   PresentationPeek
-} from '@/types/entities'
-import type { Database } from '@/types/database'
+} from './types/entities'
+import type { Database } from './types/database'
 import {
   createClient,
   type PostgrestError,

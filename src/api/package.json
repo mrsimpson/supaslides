@@ -1,6 +1,6 @@
 {
   "name": "@slidevshow/api",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "main": "dist/slidevshow-api.umd.js",
@@ -10,8 +10,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --build --force"
+    "type-check": "tsc --build --force"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.43.4",
@@ -21,7 +20,5 @@
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^20.12.5",
     "@vue/tsconfig": "^0.5.1",
-    "vite": "^5.2.8",
-    "vue-tsc": "^2.0.11"
   }
 }
