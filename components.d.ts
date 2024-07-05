@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Account: typeof import('./src/components/Account.vue')['default']
     Avatar: typeof import('./src/components/Avatar.vue')['default']
     AvatarIcon: typeof import('./src/components/AvatarIcon.vue')['default']
     BroadcastForm: typeof import('./src/components/BroadcastForm.vue')['default']
@@ -31,15 +30,12 @@ declare module 'vue' {
     MatomoOptOut: typeof import('./src/components/MatomoOptOut.vue')['default']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NButton: typeof import('naive-ui')['NButton']
-    NCard: typeof import('naive-ui')['NCard']
     NDivider: typeof import('naive-ui')['NDivider']
     NForm: typeof import('naive-ui')['NForm']
     NFormItem: typeof import('naive-ui')['NFormItem']
     NIcon: typeof import('naive-ui')['NIcon']
     NInput: typeof import('naive-ui')['NInput']
     NLayoutSider: typeof import('naive-ui')['NLayoutSider']
-    NSwitch: typeof import('naive-ui')['NSwitch']
-    NTooltip: typeof import('naive-ui')['NTooltip']
     PresentationEventsTimeline: typeof import('./src/components/PresentationEventsTimeline.vue')['default']
     PresentationFactsheet: typeof import('./src/components/PresentationFactsheet.vue')['default']
     PresentationListItem: typeof import('./src/components/PresentationListItem.vue')['default']

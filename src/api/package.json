@@ -1,0 +1,22 @@
+{
+  "name": "@slidevshow/frontend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.43.4",
+    "dotenv": "16.4.5"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.4",
+    "@types/node": "^20.12.5",
+    "@vue/tsconfig": "^0.5.1",
+    "vite": "^5.2.8",
+    "vue-tsc": "^2.0.11"
+  }
+}
