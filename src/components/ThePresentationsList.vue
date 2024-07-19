@@ -1,38 +1,41 @@
 <template>
-  <NSpace vertical>
-    <NCard v-if="currentPresentation" :bordered="false" title="Current presentation">
-      <NCard bordered embedded size="large">
+  <n-space vertical>
+    <n-card v-if="currentPresentation" :bordered="false" :title="t('current_presentation')">
+      <n-card bordered embedded size="large">
         <PresentationFactsheet :presentation="currentPresentation" :show-start-stop="false" />
-      </NCard>
-    </NCard>
-    <NCard v-if="nonCurrentPresentations?.length" :bordered="false" title="Other presentations">
-      <NList v-for="presentation in nonCurrentPresentations" :key="presentation.id" bordered>
+      </n-card>
+    </n-card>
+    <n-card
+      v-if="nonCurrentPresentations?.length"
+      :bordered="false"
+      :title="t('other_presentations')"
+    >
+      <template #header-extra>
+        <n-button type="default" @click.prevent="() => router.push('/presentations/new')">
+          <template #icon>
+            <PresentationFile />
+          </template>
+          {{ $t('create_presentation_button') }}
+        </n-button>
+      </template>
+      <n-list v-for="presentation in nonCurrentPresentations" :key="presentation.id" bordered>
         <PresentationListItem :presentation="presentation" :show-start-stop="false" />
-      </NList>
-    </NCard>
-  </NSpace>
+      </n-list>
+    </n-card>
+  </n-space>
 </template>
 
 <script lang="ts" setup>
 import PresentationFactsheet from '@/components/PresentationFactsheet.vue'
-import { NCard, NList, NSpace } from 'naive-ui'
 import { usePresenterStore } from '@/stores/presenter'
 import { storeToRefs } from 'pinia'
-import { watch } from 'vue'
-import { useUserSessionStore } from '@/stores/userSession'
 import PresentationListItem from '@/components/PresentationListItem.vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { PresentationFile } from '@vicons/carbon'
 
-const { isSignedIn, anonUuid, session } = storeToRefs(useUserSessionStore())
-let presenterStore = usePresenterStore()
-const { currentPresentation, nonCurrentPresentations, isInitialized, myPresentationEvents } =
-  storeToRefs(presenterStore)
-
-watch(
-  isSignedIn,
-  async () => {
-    if (!isInitialized.value) await presenterStore.initialize()
-    else if (!isSignedIn) presenterStore.$reset()
-  },
-  { immediate: true }
-)
+const presenterStore = usePresenterStore()
+const { t } = useI18n()
+const router = useRouter()
+const { currentPresentation, nonCurrentPresentations } = storeToRefs(presenterStore)
 </script>

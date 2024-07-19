@@ -38,6 +38,8 @@ declare module 'vue' {
     NIcon: typeof import('naive-ui')['NIcon']
     NInput: typeof import('naive-ui')['NInput']
     NLayoutSider: typeof import('naive-ui')['NLayoutSider']
+    NList: typeof import('naive-ui')['NList']
+    NSpace: typeof import('naive-ui')['NSpace']
     NSwitch: typeof import('naive-ui')['NSwitch']
     NTooltip: typeof import('naive-ui')['NTooltip']
     PresentationEventsTimeline: typeof import('./src/components/PresentationEventsTimeline.vue')['default']
@@ -52,6 +54,7 @@ declare module 'vue' {
     SpeechBubble: typeof import('./src/components/SpeechBubble.vue')['default']
     TheFooter: typeof import('./src/components/TheFooter.vue')['default']
     TheNavigation: typeof import('./src/components/TheNavigation.vue')['default']
+    TheNewPresentationPage: typeof import('./src/components/TheNewPresentationPage.vue')['default']
     ThePresentationPage: typeof import('./src/components/ThePresentationPage.vue')['default']
     ThePresentationsList: typeof import('./src/components/ThePresentationsList.vue')['default']
   }

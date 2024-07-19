@@ -1,5 +1,6 @@
 import type {
   Acknowledgement,
+  CreatePresentation,
   CreatePresentationEvent,
   Presentation,
   PresentationChange,
@@ -25,6 +26,8 @@ export interface Backend {
     presentationId: Presentation['id'],
     event: CreatePresentationEvent
   ): Promise<PresentationEvent | null>
+
+  createPresentation(presentation: CreatePresentation): Promise<Presentation | null>
 
   startPresentation(presentationId: Presentation['id']): Promise<Acknowledgement>
 

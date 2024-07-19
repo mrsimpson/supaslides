@@ -22,7 +22,9 @@
         />
       </n-form-item>
       <n-form-item>
-        <n-button :disabled="loading" @click="updateProfile">{{ t('update_button') }}</n-button>
+        <n-button :disabled="loading" @click.prevent="updateProfile">{{
+          t('update_button')
+        }}</n-button>
       </n-form-item>
     </n-form>
     <n-form-item>
@@ -102,8 +104,6 @@ async function getProfile() {
 }
 
 async function updateProfile(e: Event) {
-  e.preventDefault()
-
   const valid = await formRef.value?.validate()
 
   try {

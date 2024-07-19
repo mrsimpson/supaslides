@@ -4,6 +4,7 @@ import type { Backend } from '@/api/Backend'
 import { createBackend } from '@/api/supabaseBackend'
 import type {
   Acknowledgement,
+  CreatePresentation,
   Presentation,
   PresentationChange,
   PresentationEvent
@@ -62,6 +63,9 @@ export const usePresenterStore = defineStore('presenterStore', {
       // this can only be initialized once the user has logged in
       if (session?.user.id) {
         await this.syncMyPresentations()
+        if (!this.currentPresentationId && this.myPresentations.length) {
+          this.currentPresentationId = this.myPresentations[0].id
+        }
         this.setActivePresentation(this.currentPresentationId)
         this.isInitialized = true
       }
@@ -81,7 +85,11 @@ export const usePresenterStore = defineStore('presenterStore', {
     async broadcast(presentationId: Presentation['id'], message: string) {
       await backend.createBroadcastMessage(presentationId, message)
     },
-
+    async createPresentation(presentation: CreatePresentation): Promise<Presentation | null> {
+      const newPresentation = await backend.createPresentation(presentation)
+      // we don't need to handle anything as we've subscribed to the presentation change notifications
+      return newPresentation
+    },
     async syncMyPresentations() {
       const { session } = useUserSessionStore()
       if (session?.user.id) {

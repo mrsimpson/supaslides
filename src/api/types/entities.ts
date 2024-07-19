@@ -31,6 +31,11 @@ export type SpecificPresentationEvent<T extends PresentationEventType> = T exten
     ? Omit<PresentationEvent, 'value'> & { value: ReactionValue }
     : Event
 
+export type CreatePresentation = Omit<
+  Presentation,
+  'id' | 'created_at' | 'lc_status' | 'presenter' | 'join_code'
+>
+
 export type CreatePresentationEvent = Omit<
   PresentationEvent,
   'presentation' | 'id' | 'is_public'

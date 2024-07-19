@@ -1,35 +1,34 @@
 <template>
-  <NSpace vertical>
-    <NCard v-if="presentation" :bordered="false">
-      <NCard bordered embedded size="large">
+  <n-space vertical>
+    <n-card v-if="presentation" :bordered="false">
+      <n-card bordered embedded size="large">
         <PresentationFactsheet
           :presentation="presentation"
           :show-embedding="false"
           :show-open="false"
         />
-      </NCard>
+      </n-card>
       <BroadcastForm :presentation="presentation" />
       <PresentationEventsTimeline
         :events="myPresentationEvents"
         :my-anon-uuid="anonUuid"
         :my-user-id="session?.user.id"
       />
-    </NCard>
-  </NSpace>
+    </n-card>
+  </n-space>
 </template>
 
 <script lang="ts" setup>
 import PresentationFactsheet from '@/components/PresentationFactsheet.vue'
-import { NCard, NSpace } from 'naive-ui'
 import { usePresenterStore } from '@/stores/presenter'
 import { storeToRefs } from 'pinia'
 import { onMounted, ref, watch } from 'vue'
 import { useUserSessionStore } from '@/stores/userSession'
 import PresentationEventsTimeline from '@/components/PresentationEventsTimeline.vue'
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import type { Presentation } from 'src/api/types/entities'
 import BroadcastForm from '@/components/BroadcastForm.vue'
+import router from '@/router'
 
 const { isSignedIn, anonUuid, session } = storeToRefs(useUserSessionStore())
 
@@ -38,9 +37,8 @@ const { currentPresentation, myPresentations, isInitialized, myPresentationEvent
   storeToRefs(presenterStore)
 
 const { currentRoute } = useRouter()
-const { t } = useI18n()
 
-const presentationId = () => parseInt(currentRoute.value.params.presentationId[0])
+const presentationId = () => parseInt(<string>currentRoute.value.params.presentationId)
 
 const isPresentationCurrentOne = () => {
   return currentPresentation.value?.id && presentationId() === currentPresentation?.value.id
@@ -48,23 +46,18 @@ const isPresentationCurrentOne = () => {
 
 let presentation = ref<Presentation | null>()
 
-watch(
-  isSignedIn,
-  async () => {
-    if (!isInitialized.value) await presenterStore.initialize()
-    else if (!isSignedIn) presenterStore.$reset()
-  },
-  { immediate: true }
-)
+function setPresentationFromRoute() {
+  presentation.value = myPresentations.value.filter((p) => p.id === presentationId())[0]
+  presenterStore.setActivePresentation(presentationId())
+}
 
-watch([presentationId, myPresentations], async () => {
-  if (presentationId) {
-    presenterStore.setActivePresentation(presentationId())
-    presentation.value = myPresentations.value.filter((p) => p.id === presentationId())[0]
+watch([router.currentRoute, myPresentations], async () => {
+  if (presentationId()) {
+    setPresentationFromRoute()
   }
 })
 
-onMounted(
-  () => (presentation.value = myPresentations.value.filter((p) => p.id === presentationId())[0])
-)
+onMounted(() => {
+  setPresentationFromRoute()
+})
 </script>

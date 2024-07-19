@@ -7,7 +7,7 @@
             <CheckmarkOutline />
           </NIcon>
         </template>
-        Select
+        {{ $t('Select') }}
       </NButton>
     </template>
     <template #default

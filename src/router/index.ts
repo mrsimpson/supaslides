@@ -33,6 +33,12 @@ const router = createRouter({
       meta: { needsAuth: true }
     },
     {
+      path: '/presentations/new',
+      name: 'newPresentation',
+      component: () => import('@/views/PresenterView.vue'),
+      meta: { needsAuth: true }
+    },
+    {
       path: '/presentations',
       name: 'presentations',
       component: () => import('@/views/PresenterView.vue'),

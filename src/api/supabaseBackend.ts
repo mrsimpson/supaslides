@@ -1,5 +1,6 @@
 import type { Backend } from './Backend'
 import type {
+  CreatePresentation,
   CreatePresentationEvent,
   Presentation,
   PresentationChange,
@@ -146,6 +147,17 @@ class SupabaseBackend implements Backend {
       throw eventError
     }
     return event
+  }
+
+  async createPresentation(presentation: CreatePresentation): Promise<Presentation | null> {
+    const { error, data } = await this.client
+      .from('presentations')
+      .insert(presentation)
+      .select()
+      .single()
+
+    this.handlePostgrestError(error)
+    return data
   }
 
   async createEvent(
