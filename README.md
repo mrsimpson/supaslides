@@ -17,13 +17,15 @@ Slideshow aims at bridging this gap between presenter and audience.
 ## Stack
 
 [Backend](./packages/backend) with Supabase
+
 [Frontend](./packages/frontend) with vue.js
 
 See dedicated ReadMe-files.
 
 ## Design Decisions
 
-- This is a collaborative application
+- This is a collaborative application. Thus, "local first" is not intended: Only data which made it to the server matters (no optimistic UI)
+- Exception from the above is the support for anonymous guests: Since they are not allowed to access the database, the only get ephemeral data and persist this into the client's local storage.
 
 ## Status
 
