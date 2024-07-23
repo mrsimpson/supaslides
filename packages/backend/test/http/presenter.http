@@ -1,0 +1,30 @@
+### login
+POST {{server_url}}/auth/v1/token?grant_type=password
+apikey: {{key_anon_role}}
+Content-Type: application/json
+
+{ "email": "{{users.presenter.username}}", "password": "{{users.presenter.password}}"}
+
+> {%
+    var access_token = response.body['access_token']
+    client.global.set("access_token", access_token)
+%}
+
+### get all presentations
+GET {{server_url}}/rest/v1/presentations
+apikey: {{key_anon_role}}
+Authorization: Bearer {{access_token}}
+
+### create a new presentation
+POST {{server_url}}/rest/v1/presentations
+apikey: {{key_anon_role}}
+Authorization: Bearer {{access_token}}
+
+{"title": "a second one"}
+
+### start a presentation
+POST {{server_url}}/rest/v1/rpc/presentation_start
+apikey: {{key_anon_role}}
+Authorization: Bearer {{access_token}}
+
+{"n_presentation": 3}

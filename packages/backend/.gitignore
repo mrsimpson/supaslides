@@ -1,0 +1,11 @@
+# local supabase config
+/supabase/.temp/
+
+# caches
+**/node_modules
+
+
+# env-files
+.local
+
+.DS_file

@@ -1,0 +1,14 @@
+{
+  "name": "slidevshow",
+  "version": "0.0.1",
+  "description": "Monorepo for slidevshow",
+  "keywords": [
+    "slidev",
+    "presentations"
+  ],
+  "author": "mrsimpson",
+  "license": "ISC",
+  "devDependencies": {
+    "pnpm": "^9.4.0"
+  }
+}
