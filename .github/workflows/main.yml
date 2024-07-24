@@ -33,4 +33,5 @@ jobs:
         run: |
           npm i
           supabase status -o yaml | while IFS=: read -r key value; do export SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//'); done
+          env
           npm t
