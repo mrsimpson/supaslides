@@ -4,9 +4,7 @@ import {ensureSignIn, signOut} from './auth';
 import {anonymousHeaders, authenticatedHeaders} from "@/test/api/helpers";
 import {Presentation, PresentationEvent, testPresentation, userPresenter} from "@/test/api/testdata";
 import {randomUUID} from "node:crypto";
-
-const baseUrl = process.env.SUPABASE_URL!;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY!;
+import {baseUrl} from "@/test/api/config";
 
 describe('Presentation Events API', () => {
     describe('as the presenter', async () => {

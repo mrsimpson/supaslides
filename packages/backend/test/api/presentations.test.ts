@@ -2,8 +2,7 @@ import {afterAll, beforeAll, describe, expect, it} from 'vitest';
 import {ensureSignIn, signOut} from './auth';
 import {Presentation, PresentationPeek, testPresentation, userPresenter} from "./testdata";
 import {anonymousHeaders, authenticatedHeaders} from "@/test/api/helpers";
-
-const baseUrl = process.env.SUPABASE_URL!;
+import {baseUrl} from "@/test/api/config";
 
 describe('Presentations API', () => {
     beforeAll(async () => {
