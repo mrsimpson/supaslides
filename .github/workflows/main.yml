@@ -28,12 +28,9 @@ jobs:
             git diff
             exit 1
           fi
-      - name: Prepare environment
-        working-directory: ./packages/backend
-        run: |
-          supabase status -o yaml | while IFS=: read -r key value; do export SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//'); done
       - name: Execute API-tests
         working-directory: ./packages/backend
         run: |
           npm i
+          supabase status -o yaml | while IFS=: read -r key value; do export SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//'); done
           npm t
