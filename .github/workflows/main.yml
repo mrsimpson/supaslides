@@ -28,10 +28,13 @@ jobs:
             git diff
             exit 1
           fi
+      - name: Prepare env
+        working-directory: ./packages/backend
+        run: |
+          supabase status -o yaml | while IFS=: read -r key value; do echo SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//') >> $GITHUB_ENV; done          env
       - name: Execute API-tests
         working-directory: ./packages/backend
         run: |
-          npm i
-          supabase status -o yaml | while IFS=: read -r key value; do export SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//'); done
           env
+          npm i
           npm t
