@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@
 
       - uses: supabase/setup-cli@v1
         with:
@@ -35,5 +35,5 @@ jobs:
       - name: Execute API-tests
         working-directory: ./packages/backend
         run: |
-          npm i --ci
+          npm i
           npm t
