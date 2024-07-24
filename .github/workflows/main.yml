@@ -31,7 +31,7 @@ jobs:
       - name: Prepare env
         working-directory: ./packages/backend
         run: |
-          supabase status -o yaml | while IFS=: read -r key value; do echo SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//') >> $GITHUB_ENV; done          env
+          supabase status -o yaml | while IFS=: read -r key value; do echo SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//') >> $GITHUB_ENV; done
       - name: Execute API-tests
         working-directory: ./packages/backend
         run: |
