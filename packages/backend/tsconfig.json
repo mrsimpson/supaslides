@@ -1,5 +1,4 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
   "include": [
     "**/*.ts",
     "**/*.d.ts",
@@ -10,6 +9,11 @@
     "dist"
   ],
   "compilerOptions": {
+    "target": "es2022",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "lib": ["es2023"],
     "declaration": true,
     "declarationDir": "dist/types",
     "emitDeclarationOnly": true,
