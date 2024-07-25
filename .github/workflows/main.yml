@@ -5,15 +5,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+  verify-backend:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
 
       - uses: supabase/setup-cli@v1
         with:
-          version: 1.167.4
+          version: latest
 
       - name: Start Supabase local development setup
         working-directory: ./packages/backend
@@ -23,20 +36,6 @@ jobs:
         working-directory: ./packages/backend
         run: |
           supabase status -o yaml | while IFS=: read -r key value; do echo SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//') >> $GITHUB_ENV; done
-  verify-backend:
-    runs-on: ubuntu-latest
-    needs: setup
-
-    steps:
-      - uses: actions/checkout@v4.1.7
-
-      - uses: supabase/setup-cli@v1
-        with:
-          version: 1.167.4
-
-      - name: Start Supabase local development setup
-        working-directory: ./packages/backend
-        run: supabase start
 
       - name: Verify generated types are checked in
         working-directory: ./packages/backend
@@ -51,5 +50,32 @@ jobs:
         working-directory: ./packages/backend
         run: |
           env
-          npm i
+          npm ci
           npm t
+
+  test-e2e:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase local development setup
+        working-directory: ./packages/backend
+        run: supabase start
+
+      - name: Prepare env
+        working-directory: ./packages/backend
+        run: |
+          supabase status -o yaml | while IFS=: read -r key value; do echo SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//') >> $GITHUB_ENV; done
+
+      - name: Execute end-to-end-tests
+        working-directory: ./packages/frontend
+        run: |
+          env
+          npm ci
+          npm run test:e2e
