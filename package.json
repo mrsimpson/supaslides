@@ -1,14 +1,18 @@
 {
-  "name": "slidevshow",
+  "name": "supaslides",
   "version": "0.0.1",
-  "description": "Monorepo for slidevshow",
+  "description": "Monorepo for Supaslides",
   "keywords": [
     "slidev",
     "presentations"
   ],
+  "scripts": {
+    "test": "npm run test --workspace=packages/backend --workspace=packages/frontend"
+  },
   "author": "mrsimpson",
   "license": "ISC",
-  "devDependencies": {
-    "pnpm": "^9.4.0"
-  }
+  "workspaces": [
+    "packages/backend",
+    "packages/frontend"
+  ]
 }

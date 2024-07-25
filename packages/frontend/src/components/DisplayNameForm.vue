@@ -1,7 +1,7 @@
 <template>
   <p v-if="!isEditMode">
     {{ t('you_are_participating_as') }}
-    <a :style="{ color: theme.actionColor }" @click="setEditMode">{{ displayName }}</a>
+    <a @click="setEditMode">{{ displayName }}</a>
   </p>
   <n-form
     v-else

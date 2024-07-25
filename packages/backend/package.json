@@ -1,5 +1,5 @@
 {
-  "name": "@slidevshow/backend",
+  "name": "@supaslides/backend",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -20,5 +20,17 @@
     "@types/node": "^20.12.5",
     "@vue/tsconfig": "^0.5.1",
     "vitest": "1.6.0"
-  }
+  },
+  "description": "Backend for Supaslides, providing also type defitions for the APIs",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "supabase",
+    "presentations",
+    "slidev"
+  ],
+  "author": "mrsimpson",
+  "license": "ISC"
 }

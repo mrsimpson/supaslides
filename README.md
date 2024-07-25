@@ -1,6 +1,8 @@
-# Slideshow frontend
+# SupaSlides
 
-Webapps for enabling realtime interactions between presenter and audience in a remote presentation.
+Get engaged with your audience!
+
+Webapp(s) for enabling realtime interactions between presenter and audience in a remote presentation.
 
 ## Motivation
 
