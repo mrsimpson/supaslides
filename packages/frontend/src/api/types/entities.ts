@@ -44,3 +44,4 @@ export type CreatePresentationEvent = Omit<
 }
 
 export type PresentationChange = RealtimePostgresChangesPayload<Presentation>
+export type EventType = Database['public']['Enums']['event_type']

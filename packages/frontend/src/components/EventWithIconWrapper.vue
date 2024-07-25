@@ -13,7 +13,9 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps<{ isMine: boolean; eventType: string }>()
+import type {EventType} from "@/api/types/entities";
+
+const props = defineProps<{ isMine: boolean; eventType: EventType }>()
 </script>
 
 <style lang="css" scoped>
