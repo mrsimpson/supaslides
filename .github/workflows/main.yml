@@ -50,7 +50,7 @@ jobs:
         working-directory: ./packages/backend
         run: |
           env
-          npm ci
+          npm ci --include=dev --include=prod
           npm t
 
   test-e2e:
@@ -77,5 +77,5 @@ jobs:
         working-directory: ./packages/frontend
         run: |
           env
-          npm ci
+          npm ci --include=dev --include=prod
           npm run test:e2e
