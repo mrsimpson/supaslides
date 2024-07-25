@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 import {config} from "dotenv";
 // Load environment variables from.env file
-config({ path: ['.env.test.local', '.env.local', '.env'] })
+config({ path: ['.env.test.local', '.env.local', '../../.env.local', '.env'] })
 
 export default defineConfig({
     root: '.',
