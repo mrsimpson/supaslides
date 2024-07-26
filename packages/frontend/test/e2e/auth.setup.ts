@@ -4,6 +4,7 @@ import { audienceCredentialsFile, presenterCredentialsFile } from './helpers.js'
 async function signIn(page: Page, email: string, password: string, credentialsFile: string) {
   // Perform authentication steps. Replace these actions with your own.
   await page.goto('http://localhost:5173/me')
+  await expect(page.getByTestId('input-signin-email')).toBeVisible()
   await page.getByTestId('input-signin-email').getByRole('textbox').fill(email)
   await page.getByTestId('input-signin-password').getByRole('textbox').fill(password)
   await page.getByTestId('button-signin-submit').click()
