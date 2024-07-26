@@ -92,6 +92,10 @@ jobs:
         working-directory: ./packages/frontend
         run: npx playwright install --with-deps
 
+      - name: Build again
+        working-directory: ./packages/frontend
+        run: npm run build
+
       - name: Execute end-to-end-tests
         working-directory: ./packages/frontend
         run: npm run test:e2e
