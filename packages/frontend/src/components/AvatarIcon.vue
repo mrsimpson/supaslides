@@ -4,7 +4,6 @@
   </n-avatar>
 </template>
 <script lang="ts" setup>
-import { defineProps } from 'vue'
 import { getColorsForName } from '@/lib/colors'
 
 const props = defineProps({ name: { type: String } })

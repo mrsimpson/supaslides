@@ -141,7 +141,6 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, ref } from 'vue'
 import slug from '@/lib/slug'
 import type { Presentation } from 'src/api/types/entities'
 import { usePresenterStore } from '@/stores/presenter'
