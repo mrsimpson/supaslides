@@ -148,6 +148,7 @@ import { Code, Play, QrCode, Stop } from '@vicons/carbon'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useMessage } from 'naive-ui'
+import { ref } from 'vue'
 
 const showQrCode = ref(false)
 const showEmbeddingCode = ref(false)

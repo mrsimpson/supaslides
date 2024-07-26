@@ -99,6 +99,11 @@ jobs:
       - name: Execute end-to-end-tests
         working-directory: ./packages/frontend
         run: npm run test:e2e
+        env:
+          TEST_PRESENTER_EMAIL: test-presenter@local
+          TEST_PRESENTER_PASSWORD: presenter
+          TEST_AUDIENCE_EMAIL: test-audience@local
+          TEST_AUDIENCE_PASSWORD: audience
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

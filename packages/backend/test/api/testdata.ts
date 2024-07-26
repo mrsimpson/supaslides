@@ -6,8 +6,8 @@ export type PresentationEvent = Database['public']['Tables']['presentation_event
 export type PresentationPeek = Database['public']['CompositeTypes']['presentation_peek_type'];
 
 export const userPresenter = {
-    email: 'test-presenter@local',
-    password: 'test-presenter'
+    email: process.env.TEST_PRESENTER_EMAIL || 'test-presenter@local',
+    password: process.env.TEST_PRESENTER_PASSWORD || 'test-presenter'
 }
 
 export function testProfile(userId: Profile['id']): Partial<Profile> {
