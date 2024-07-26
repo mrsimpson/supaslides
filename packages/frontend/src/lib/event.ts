@@ -1,21 +1,18 @@
 import type { PresentationEvent } from 'src/api/types/entities'
-import { supabase } from '@/lib/supabase'
+import {useUserSessionStore} from "@/stores/userSession";
 
 export async function getAuthorDisplayName(event: PresentationEvent) {
   const registeredUsers = new Map<PresentationEvent['created_by'], string>()
+  const {fetchProfile} = useUserSessionStore()
 
   if (event.created_by_alias) {
     return event.created_by_alias
   } else {
     if (event.created_by && !registeredUsers.has(event.created_by)) {
       // buffer it
-      const { error, data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', event.created_by)
-        .single()
+      const profile  = await fetchProfile(event.created_by)
 
-      if (!error && profile) {
+      if (profile) {
         const displayName = profile.full_name || profile.username
         if (displayName) registeredUsers.set(event.created_by, displayName)
       }

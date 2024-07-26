@@ -88,6 +88,10 @@ export const useAudienceStore = defineStore('audienceStore', {
 
         async comment(commentText: string) {
             await this.insertEvent('comment', {commentText})
+        },
+
+        async peekPresentation(joinCode: string){
+            return await backend.peekPresentation(joinCode)
         }
     }
 })
