@@ -84,10 +84,14 @@ jobs:
         run: |
           supabase status -o yaml | while IFS=: read -r key value; do echo SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//') >> $GITHUB_ENV; done
 
+      - name: Install dependencies
+        working-directory: ./packages/frontend
+        run: npm ci --include=dev --include=prod
+
+      - name: Install Playwright
+        working-directory: ./packages/frontend
+        run: npx playwright install --with-deps
+
       - name: Execute end-to-end-tests
         working-directory: ./packages/frontend
-        run: |
-          env
-          npm ci --include=dev --include=prod
-          npx playwright install
-          npm run test:e2e
+        run: npm run test:e2e

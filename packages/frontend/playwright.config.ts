@@ -1,11 +1,12 @@
 import process from 'node:process'
 import {defineConfig, devices} from '@playwright/test'
+import dotenv from 'dotenv'
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// require('dotenv').config();
+dotenv.config({ path: ['.env.test.local', '.env.local', '../../.env.local', '.env'] })
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -54,14 +55,6 @@ export default defineConfig({
       },
       dependencies: ['setup']
     }
-    // {
-    //   name: 'headless',
-    //   use: {
-    //     ...devices['Desktop Chrome'],
-    //     headless: true
-    //   },
-    //   dependencies: ['setup']
-    // }
     // {
     //   name: 'firefox',
     //   use: {
