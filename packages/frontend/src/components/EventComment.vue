@@ -1,5 +1,5 @@
 <template>
-  <EventWithIconWrapper :is-mine="isMine">
+  <EventWithIconWrapper :is-mine="isMine" event-type="comment">
     <template #icon>
       <AvatarIcon :name="displayName" />
     </template>

@@ -7,7 +7,7 @@
         <p v-if="presentation.description">{{ presentation.description }}</p>
         <template #action>
           <DisplayNameForm />
-          <NButton :disabled="!displayName" primary type="primary" @click="join()">Join!</NButton>
+          <NButton :disabled="!displayName" primary type="primary" @click="handleJoin()">Join!</NButton>
         </template>
       </NCard>
     </NSpace>
@@ -18,7 +18,6 @@
 import { NButton, NCard, NSpace } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { supabase } from '@/lib/supabase'
 import type { PresentationPeek } from 'src/api/types/entities'
 import { useAudienceStore } from '@/stores/audience'
 import { useUserSessionStore } from '@/stores/userSession'
@@ -31,21 +30,21 @@ const presenterName = router.currentRoute.value?.query['presenter']
 const presentation = ref(null as PresentationPeek | null)
 
 const { displayName } = storeToRefs(useUserSessionStore())
+const {peekPresentation, join} = useAudienceStore()
 
 onMounted(async () => {
   if (joinCode) {
-    const presentationPeek = await supabase.rpc('presentation_peek', { t_join_code: `${joinCode}` })
-    if (presentationPeek.data) {
-      presentation.value = presentationPeek.data
+    const presentationPeek = await peekPresentation(joinCode)
+    if (presentationPeek) {
+      presentation.value = presentationPeek
     }
   }
 })
 
-async function join() {
+async function handleJoin() {
   if (presentation.value && joinCode) {
-    const audienceStore = useAudienceStore()
 
-    await audienceStore.join(joinCode)
+    await join(joinCode)
 
     router.push('/feedback')
   }

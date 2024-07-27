@@ -1,7 +1,7 @@
 import type { Database, Tables } from './database'
 import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
 
-export type Profile = Tables<'profiles'>
+export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Presentation = Tables<'presentations'>
 export type PresentationEvent = Omit<
   Tables<'presentation_events'>,
@@ -44,3 +44,4 @@ export type CreatePresentationEvent = Omit<
 }
 
 export type PresentationChange = RealtimePostgresChangesPayload<Presentation>
+export type EventType = Database['public']['Enums']['event_type']

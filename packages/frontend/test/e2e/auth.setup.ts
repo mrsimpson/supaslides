@@ -1,23 +1,48 @@
-import { expect, Page, test as setup } from '@playwright/test'
-import { audienceCredentialsFile, presenterCredentialsFile } from './helpers.js'
+import {expect, Page, test as setup} from '@playwright/test'
+import {audienceCredentialsFile, presenterCredentialsFile} from './helpers.js'
+import * as process from "node:process";
+
+const presenterEmail = process.env.TEST_PRESENTER_EMAIL!;
+const presenterPassword = process.env.TEST_PRESENTER_PASSWORD!;
+const audienceEmail = process.env.TEST_AUDIENCE_EMAIL!;
+const audiencePassword = process.env.TEST_AUDIENCE_PASSWORD!;
 
 async function signIn(page: Page, email: string, password: string, credentialsFile: string) {
-  // Perform authentication steps. Replace these actions with your own.
-  await page.goto('http://localhost:5173/me')
-  await page.getByTestId('input-signin-email').getByRole('textbox').fill(email)
-  await page.getByTestId('input-signin-password').getByRole('textbox').fill(password)
-  await page.getByTestId('button-signin-submit').click()
+    // Perform authentication steps. Replace these actions with your own.
+    await page.goto('http://localhost:5173/me')
+    await expect(page.getByTestId('input-signin-email')).toBeVisible()
+    await page.getByTestId('input-signin-email').getByRole('textbox').fill(email)
+    await page.getByTestId('input-signin-password').getByRole('textbox').fill(password)
+    await page.getByTestId('button-signin-submit').click()
 
-  // Once the logout is active, we're surely logged in
-  await expect(page.getByTestId('button-account-signOut')).toBeEnabled()
+    // Once the logout is active, we're surely logged in
+    await expect(page.getByTestId('button-account-signOut')).toBeEnabled()
 
-  await page.context().storageState({ path: credentialsFile })
+    await page.context().storageState({path: credentialsFile})
 }
 
-setup('authenticate as presenter', async ({ page }) => {
-  await signIn(page, 'presenter@local', 'presenter', presenterCredentialsFile)
+setup('create the test user accounts if not exists', async ({request}) => {
+    async function signUp(email: string, password: string) {
+        await request.post(`${process.env.SUPABASE_API_URL}/auth/v1/signup`, {
+            headers: {
+                apikey: process.env.SUPABASE_ANON_KEY!,
+                "Content-Type": "application/json"
+            },
+            data: {
+                email,
+                password
+            }
+        })
+    }
+
+    await signUp(presenterEmail, presenterPassword)
+    await signUp(audienceEmail, audiencePassword)
 })
 
-setup('authenticate as audience', async ({ page }) => {
-  await signIn(page, 'audience1@local', 'audience1', audienceCredentialsFile)
+setup('authenticate as presenter', async ({page}) => {
+    await signIn(page, presenterEmail, presenterPassword, presenterCredentialsFile)
+})
+
+setup('authenticate as audience', async ({page}) => {
+    await signIn(page, audienceEmail, audiencePassword, audienceCredentialsFile)
 })

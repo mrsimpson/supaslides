@@ -5,11 +5,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --include=dev --include=prod
+      - run: npm run build
+
+
+  verify-backend:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
 
       - uses: supabase/setup-cli@v1
         with:
@@ -17,7 +36,12 @@ jobs:
 
       - name: Start Supabase local development setup
         working-directory: ./packages/backend
-        run: supabase start
+        run: supabase start -x storage-api,imgproxy,inbucket,pgadmin-schema-diff,migra,postgres-meta,studio,edge-runtime,logflare,pg_prov,pgbouncer
+
+      - name: Prepare env
+        working-directory: ./packages/backend
+        run: |
+          supabase status -o yaml | while IFS=: read -r key value; do echo SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//') >> $GITHUB_ENV; done
 
       - name: Verify generated types are checked in
         working-directory: ./packages/backend
@@ -28,13 +52,62 @@ jobs:
             git diff
             exit 1
           fi
-      - name: Prepare env
-        working-directory: ./packages/backend
-        run: |
-          supabase status -o yaml | while IFS=: read -r key value; do echo SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//') >> $GITHUB_ENV; done
       - name: Execute API-tests
         working-directory: ./packages/backend
         run: |
           env
-          npm i
+          npm ci --include=dev --include=prod
           npm t
+
+  test-e2e:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase local development setup
+        working-directory: ./packages/backend
+        run: supabase start -x storage-api,imgproxy,inbucket,pgadmin-schema-diff,migra,postgres-meta,studio,edge-runtime,logflare,pg_prov,pgbouncer
+
+      - name: Prepare env
+        working-directory: ./packages/backend
+        run: |
+          supabase status -o yaml | while IFS=: read -r key value; do echo SUPABASE_"$key"=$(echo "$value" | sed 's/^ *//') >> $GITHUB_ENV; done
+
+      - name: Install dependencies
+        working-directory: ./packages/frontend
+        run: npm ci --include=dev --include=prod
+
+      - name: Install Playwright
+        working-directory: ./packages/frontend
+        run: npx playwright install chromium --with-deps
+
+      - name: Build again
+        working-directory: ./packages/frontend
+        run: npm run build
+
+      - name: Execute end-to-end-tests
+        working-directory: ./packages/frontend
+        run: npm run test:e2e
+        env:
+          TEST_PRESENTER_EMAIL: test-presenter@local
+          TEST_PRESENTER_PASSWORD: presenter
+          TEST_AUDIENCE_EMAIL: test-audience@local
+          TEST_AUDIENCE_PASSWORD: audience
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: ./packages/frontend/playwright-report/
+          retention-days: 30

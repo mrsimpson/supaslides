@@ -1,11 +1,12 @@
 import process from 'node:process'
 import {defineConfig, devices} from '@playwright/test'
+import dotenv from 'dotenv'
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// require('dotenv').config();
+dotenv.config({ path: ['.env.test.local', '.env.local', '../../.env.local', '.env.test'] })
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -37,7 +38,7 @@ export default defineConfig({
     baseURL: 'http://localhost:5173',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
 
     /* Only on CI systems run the tests headless unless forced to headless mode */
     headless: !!process.env.CI || !!process.env.HEADLESS
@@ -54,14 +55,6 @@ export default defineConfig({
       },
       dependencies: ['setup']
     }
-    // {
-    //   name: 'headless',
-    //   use: {
-    //     ...devices['Desktop Chrome'],
-    //     headless: true
-    //   },
-    //   dependencies: ['setup']
-    // }
     // {
     //   name: 'firefox',
     //   use: {

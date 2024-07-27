@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { presenterCredentialsFile } from './helpers.js'
 import { ProfilePage } from './profile.page.js'
+import process from "node:process";
 
 test.use({ storageState: presenterCredentialsFile })
 
@@ -10,7 +11,7 @@ test('After sign-in, the profile page should be visible', async ({ page }) => {
   await profilePage.isProfileLoaded()
 
   await expect(profilePage.email).toBeDisabled()
-  await expect(profilePage.email).toHaveValue('presenter@local')
+  await expect(profilePage.email).toHaveValue(process.env.TEST_PRESENTER_EMAIL!)
   await expect(profilePage.signOutButton).toBeEnabled()
 })
 
