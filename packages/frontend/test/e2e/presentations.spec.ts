@@ -61,6 +61,8 @@ test.describe('Presentation handling', async () => {
     await presentationsPage.broadcastInput.press('Enter')
     await expect(presentationsPage.eventsList.getByText(textEnter)).toBeVisible()
     await expect(presentationsPage.broadcastInput).toBeEmpty()
+
+
   })
 
   test.afterEach(async ({ page }) => {

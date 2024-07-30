@@ -20,6 +20,7 @@
       <n-input
         v-model:value="formValue.displayName"
         :placeholder="t('your_display_name_placeholder')"
+        data-testid="input-display-name"
       />
     </n-form-item>
     <n-form-item>

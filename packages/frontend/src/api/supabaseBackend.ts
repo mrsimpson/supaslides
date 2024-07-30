@@ -20,17 +20,17 @@ import {
 import * as console from "node:console";
 
 class SupabaseBackend implements Backend {
-    private client: SupabaseClient
+    private static client: SupabaseClient
 
     constructor(baseUrl: string, apiKey: string) {
-        this.client = createClient<Database>(baseUrl, apiKey)
+        if(!SupabaseBackend.client) SupabaseBackend.client = createClient<Database>(baseUrl, apiKey)
     }
 
     listenToPresentationEvents(
         presentationId: Presentation['id'],
         callback: (event: PresentationEvent) => void
     ): void {
-        this.client
+        SupabaseBackend.client
             .channel('presentation_events')
             .on(
                 'postgres_changes',
@@ -44,7 +44,7 @@ class SupabaseBackend implements Backend {
                     callback(<PresentationEvent>payload.new)
             )
             .subscribe()
-        const presentationBroadcastChannel = this.client.channel(
+        const presentationBroadcastChannel = SupabaseBackend.client.channel(
             this.getRealtimeChannelName(presentationId)
         )
         presentationBroadcastChannel.subscribe((status) => {
@@ -65,7 +65,7 @@ class SupabaseBackend implements Backend {
     }
 
     listenToPresentationChanges(userId: string, callback: (change: PresentationChange) => void) {
-        this.client
+        SupabaseBackend.client
             .channel('presentations')
             .on(
                 'postgres_changes',
@@ -91,7 +91,7 @@ class SupabaseBackend implements Backend {
         }
         const presentationPeek = await this.peekPresentation(joinCode)
         if (presentationPeek) {
-            const {error} = await this.client.rpc('join_presentation', {
+            const {error} = await SupabaseBackend.client.rpc('join_presentation', {
                 t_join_code: joinCode,
                 t_user_alias: displayName,
                 u_user_uuid: userId,
@@ -103,7 +103,7 @@ class SupabaseBackend implements Backend {
     }
 
     async peekPresentation(joinCode: string): Promise<PresentationPeek> {
-        const {data} = await this.client.rpc('presentation_peek', {
+        const {data} = await SupabaseBackend.client.rpc('presentation_peek', {
             t_join_code: joinCode
         });
 
@@ -111,11 +111,11 @@ class SupabaseBackend implements Backend {
     }
 
     registerAuthCallback(callback: (event: string, session: any) => void): void {
-        this.client.auth.onAuthStateChange(callback)
+        SupabaseBackend.client.auth.onAuthStateChange(callback)
     }
 
     async fetchPresentationById(presentationId: number): Promise<Presentation | null> {
-        const {error, data: presentation} = await this.client
+        const {error, data: presentation} = await SupabaseBackend.client
             .from('presentations')
             .select('*')
             .eq('id', presentationId)
@@ -125,7 +125,7 @@ class SupabaseBackend implements Backend {
     }
 
     async fetchPresentationsOfUser(userId: string): Promise<Presentation[]> {
-        const {data: presentations} = await this.client
+        const {data: presentations} = await SupabaseBackend.client
             .from('presentations')
             .select('*')
             .eq('presenter', userId)
@@ -133,7 +133,7 @@ class SupabaseBackend implements Backend {
     }
 
     async fetchPresentationEvents(presentationId: number): Promise<any[]> {
-        const {data, error} = await this.client
+        const {data, error} = await SupabaseBackend.client
             .from('presentation_events')
             .select('*')
             .eq('presentation', presentationId)
@@ -146,7 +146,7 @@ class SupabaseBackend implements Backend {
     }
 
     async fetchEventById(eventId: PresentationEvent['id']): Promise<PresentationEvent> {
-        const {data: event, error: eventError} = await this.client
+        const {data: event, error: eventError} = await SupabaseBackend.client
             .from('presentation_events')
             .select('*')
             .eq('id', eventId)
@@ -158,7 +158,7 @@ class SupabaseBackend implements Backend {
     }
 
     async createPresentation(presentation: CreatePresentation): Promise<Presentation | null> {
-        const {error, data} = await this.client
+        const {error, data} = await SupabaseBackend.client
             .from('presentations')
             .insert(presentation)
             .select()
@@ -174,7 +174,7 @@ class SupabaseBackend implements Backend {
     ): Promise<PresentationEvent | null> {
         const newEvent = event as PresentationEvent
         newEvent.presentation = presentationId
-        const {error} = await this.client.from('presentation_events').insert(newEvent)
+        const {error} = await SupabaseBackend.client.from('presentation_events').insert(newEvent)
 
         this.handlePostgrestError(error)
         return newEvent
@@ -184,7 +184,7 @@ class SupabaseBackend implements Backend {
         presentationId: Presentation['id'],
         message: string
     ): Promise<PresentationEvent | undefined> {
-        const {error, data} = await this.client
+        const {error, data} = await SupabaseBackend.client
             .from('presentation_events')
             .insert([
                 {
@@ -207,14 +207,14 @@ class SupabaseBackend implements Backend {
     }
 
     async startPresentation(presentationId: Presentation['id']) {
-        const response = await this.client.rpc('presentation_start', {n_presentation: presentationId})
+        const response = await SupabaseBackend.client.rpc('presentation_start', {n_presentation: presentationId})
         const {error, data: acknowledgment} = response
         this.handlePostgrestError(error)
         return acknowledgment
     }
 
     async stopPresentation(presentationId: Presentation['id']) {
-        const response = await this.client.rpc('presentation_stop', {n_presentation: presentationId})
+        const response = await SupabaseBackend.client.rpc('presentation_stop', {n_presentation: presentationId})
         const {error, data: acknowledgment} = response
         this.handlePostgrestError(error)
         return acknowledgment
@@ -228,7 +228,7 @@ class SupabaseBackend implements Backend {
     }
 
     async deletePresentation(presentationId: Presentation['id']): Promise<boolean> {
-        const {error} = await this.client.from('presentations').delete().eq('id', presentationId)
+        const {error} = await SupabaseBackend.client.from('presentations').delete().eq('id', presentationId)
         return !error
     }
 
@@ -237,7 +237,7 @@ class SupabaseBackend implements Backend {
     }
 
     private async sendRealtimeEvent(presentationId: Presentation['id'], event: PresentationEvent) {
-        await this.client.channel(this.getRealtimeChannelName(presentationId)).send({
+        await SupabaseBackend.client.channel(this.getRealtimeChannelName(presentationId)).send({
             type: REALTIME_LISTEN_TYPES.BROADCAST,
             event: 'presentation_event',
             payload: event
@@ -252,7 +252,7 @@ class SupabaseBackend implements Backend {
     }
 
     async fetchProfile(userId: Profile["id"]): Promise<Profile | null> {
-        const {data, error} = await this.client
+        const {data, error} = await SupabaseBackend.client
             .from('profiles')
             .select(`*`)
             .eq('id', userId)
@@ -262,14 +262,14 @@ class SupabaseBackend implements Backend {
     }
 
     async updateProfile(profile: Profile): Promise<boolean> {
-        const {error} = await this.client.from('profiles').upsert(profile)
+        const {error} = await SupabaseBackend.client.from('profiles').upsert(profile)
         this.handlePostgrestError(error)
 
         return !!error
     }
 
     async signInWithMagicLink(email: string): Promise<Error | null> {
-        const {error} = await this.client.auth.signInWithOtp({
+        const {error} = await SupabaseBackend.client.auth.signInWithOtp({
             email: email
         })
 
@@ -277,7 +277,7 @@ class SupabaseBackend implements Backend {
     }
 
     async signInWithPassword(email: string, password: string): Promise<Error | null> {
-        const {error} = await this.client.auth.signInWithPassword({
+        const {error} = await SupabaseBackend.client.auth.signInWithPassword({
             email: email,
             password: password
         })
@@ -285,7 +285,7 @@ class SupabaseBackend implements Backend {
     }
 
     async signOut():  Promise<Error | null> {
-        const {error} = await this.client.auth.signOut()
+        const {error} = await SupabaseBackend.client.auth.signOut()
         return error
     }
 }

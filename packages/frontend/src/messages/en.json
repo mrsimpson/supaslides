@@ -16,6 +16,7 @@
   "join_a_presentation_card_content_1": "You have not joined a conversation yet.",
   "join_a_presentation_card_content_2": "Get the join link from your presenter or scan the QR-Code to start.",
   "join_a_presentation_card_title": "Join a Presentation",
+  "no_join_code_instructions": "You can join a presentation by providing a join code. \nYou'll receive this code from you presenter - Either as URL or as a scnannable QR-Code",
   "open_button": "Open",
   "other_presentations": "Other presentations",
   "please_enter_presentation_title": "You have to provide a title for your presentation",
