@@ -5,7 +5,7 @@
       <p>{{ t('join_a_presentation_card_content_2') }}</p>
     </NCard>
     <NCard v-if="currentPresentation" embedded>
-      <h1>{{ currentPresentation?.title || t('an_untitled_presentation') }}</h1>
+      <h1 data-testid="heading-current-presentation">{{ currentPresentation?.title || t('an_untitled_presentation') }}</h1>
       <h2 v-if="currentPresentation.presenter_fullname">
         by {{ currentPresentation?.presenter_fullname }}
       </h2>

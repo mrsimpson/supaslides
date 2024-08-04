@@ -1,6 +1,6 @@
 <template>
   <!--  <NDivider>Send a reaction whenever you feel like you need to!</NDivider>-->
-  <NFlex v-if="isJoined()" size="large">
+  <NFlex v-if="isJoined()" size="large" data-testid="panel-reactions">
     <EmojiReaction emoticon="👍" />
     <EmojiReaction emoticon="❤️" />
     <EmojiReaction emoticon="🤘" />

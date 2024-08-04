@@ -2,6 +2,9 @@ import { expect, test } from '@playwright/test'
 import { audienceCredentialsFile, get, presenterCredentialsFile } from './helpers.js'
 import { PresentationsPage } from './presentations.page.js'
 import { JoinPage } from './join.page.js'
+import { AudiencePage } from './audience.page.js'
+
+const joinedContextPath = '.auth/joined-audience.json'
 
 test.use({ storageState: audienceCredentialsFile })
 
@@ -43,6 +46,28 @@ test.describe('Participating in a presentation', async () => {
     await joinPage.displayName.fill('A good guest')
     await joinPage.page.keyboard.press('Enter')
     await expect(joinPage.joinButton).toBeEnabled()
+    await joinPage.joinButton.click()
+
+    const audiencePage = new AudiencePage(page)
+    await page.waitForURL('/feedback', {waitUntil: 'networkidle'})
+    await expect(audiencePage.currentPresentationHeading).toContainText(presentationTitle)
+    await page.context().storageState({ path: joinedContextPath })
+  })
+
+  test('Should be possible to send a message', async ({ browser }) => {
+
+    const joinedContext = await browser.newContext({ storageState: joinedContextPath })
+    const page = await joinedContext.newPage()
+    const audiencePage = new AudiencePage(page)
+
+    await audiencePage.goto()
+
+    await audiencePage.commentInput.fill('Can send via Enter')
+    await audiencePage.page.keyboard.press('Enter')
+    await expect(audiencePage.eventsList.locator('.speech-bubble')).toHaveText('Can send via Enter')
+    await audiencePage.commentInput.fill('Can send via Button')
+    await audiencePage.commentButton.click()
+    await expect(audiencePage.eventsList.locator('.speech-bubble')).toHaveText(['Can send via Enter', 'Can send via Button'])
   })
 
   test.afterAll(async ({ browser }) => {

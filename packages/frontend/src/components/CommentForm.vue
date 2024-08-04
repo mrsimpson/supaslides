@@ -1,10 +1,10 @@
 <template>
   <n-form ref="formRef" :model="formValue" inline @submit="sendComment">
     <n-form-item class="form-input" path="commentText">
-      <n-input v-model:value="formValue.commentText" :placeholder="t('comment_placeholder')" />
+      <n-input v-model:value="formValue.commentText" :placeholder="t('comment_placeholder')" data-testid="input-comment"/>
     </n-form-item>
     <n-form-item class="form-button">
-      <n-button :disabled="debounced" @click="sendComment">
+      <n-button :disabled="debounced" @click="sendComment" data-testid="button-comment-send">
         <template #icon>
           <n-icon>
             <Send />

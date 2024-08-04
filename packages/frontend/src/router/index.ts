@@ -23,7 +23,7 @@ const router = createRouter({
     {
       path: '/feedback',
       name: 'feedback',
-      component: () => import('@/views/FeedbackView.vue'),
+      component: () => import('@/views/AudienceView.vue'),
       meta: { needsAuth: false }
     },
     {
