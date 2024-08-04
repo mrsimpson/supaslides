@@ -19,7 +19,7 @@ const router = createRouter({
       component: IntroView,
       meta: { needsAuth: false }
     },
-    { path: '/join', name: 'join', component: import('@/views/JoinView.vue') },
+    { path: '/join', name: 'join', component: () => import('@/views/JoinView.vue') },
     {
       path: '/feedback',
       name: 'feedback',

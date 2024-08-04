@@ -3,81 +3,90 @@ import { audienceCredentialsFile, get, presenterCredentialsFile } from './helper
 import { PresentationsPage } from './presentations.page.js'
 import { JoinPage } from './join.page.js'
 import { AudiencePage } from './audience.page.js'
+;['Authenticated', 'Anonymous'].map((audienceType) => {
+  const joinedContextPath = `.auth/${audienceType}-joined-audience.json`
 
-const joinedContextPath = '.auth/joined-audience.json'
+  test.describe(`${audienceType} participating in a presentation`, async () => {
+    const now = new Date()
+    const presentationTitle = `Playwright rules on ${now.toISOString()}`
+    const presentationDescription = `We've come a long way.\nThis test started at ${now.toISOString()}`
+    let createdPresentationId: string
+    let joinCode: string
 
-test.use({ storageState: audienceCredentialsFile })
+    test.beforeAll(async ({ browser }) => {
+      const presenterContext = await browser.newContext({ storageState: presenterCredentialsFile })
+      const page = await presenterContext.newPage()
+      const request = await presenterContext.request
+      const presentationsPage = new PresentationsPage(page)
 
-test.describe('Participating in a presentation', async () => {
-  const now = new Date()
-  const presentationTitle = `Playwright rules on ${now.toISOString()}`
-  const presentationDescription = `We've come a long way.\nThis test started at ${now.toISOString()}`
-  let createdPresentationId: string
-  let joinCode: string
+      await presentationsPage.goto()
+      await presentationsPage.newPresentationButton.click()
+      await presentationsPage.newPresentationTitleInput.fill(presentationTitle)
+      await presentationsPage.newPresentationDescriptionInput.click()
+      await presentationsPage.newPresentationDescriptionInput.fill(presentationDescription)
+      await presentationsPage.createPresentationButton.click()
 
-  test.beforeAll(async ({ browser }) => {
-    const presenterContext = await browser.newContext({ storageState: presenterCredentialsFile })
-    const page = await presenterContext.newPage()
-    const request = await presenterContext.request
-    const presentationsPage = new PresentationsPage(page)
+      await presentationsPage.page.waitForURL(new RegExp(/\/presentations\/\d+/))
+      createdPresentationId = page.url().slice(page.url().lastIndexOf('/') + 1)
 
-    await presentationsPage.goto()
-    await presentationsPage.newPresentationButton.click()
-    await presentationsPage.newPresentationTitleInput.fill(presentationTitle)
-    await presentationsPage.newPresentationDescriptionInput.click()
-    await presentationsPage.newPresentationDescriptionInput.fill(presentationDescription)
-    await presentationsPage.createPresentationButton.click()
+      const createdPresentation = await get(
+        request,
+        `/rest/v1/presentations?select=*&id=eq.${createdPresentationId}`
+      )
+      joinCode = createdPresentation[0].join_code
+    })
 
-    await presentationsPage.page.waitForURL(new RegExp(/\/presentations\/\d+/))
-    createdPresentationId = page.url().slice(page.url().lastIndexOf('/') + 1)
+    test('Should be possible to join with the valid join code', async ({ browser }) => {
+      const context = await browser.newContext({ storageState: audienceType === 'Authenticated' ? audienceCredentialsFile : undefined })
+      const page = await context.newPage()
 
-    const createdPresentation = await get(request, `/rest/v1/presentations?select=*&id=eq.${createdPresentationId}`)
-    joinCode = createdPresentation[0].join_code
-  })
+      const joinPage = new JoinPage(page)
 
-  test('Should be possible to join with the valid join code', async ({ page }) => {
-    const joinPage = new JoinPage(page)
+      await joinPage.goto(joinCode)
 
-    await joinPage.goto(joinCode)
+      await expect(joinPage.presentationTitle).toHaveText(presentationTitle)
+      await expect(joinPage.presentationDescription).toHaveText(presentationDescription)
+      await expect(joinPage.joinButton).toBeDisabled()
+      await joinPage.displayName.fill(`${audienceType} participant`)
+      await joinPage.page.keyboard.press('Enter')
+      await expect(joinPage.joinButton).toBeEnabled()
+      await joinPage.joinButton.click()
 
-    await expect(joinPage.presentationTitle).toHaveText(presentationTitle)
-    await expect(joinPage.presentationDescription).toHaveText(presentationDescription)
-    await expect(joinPage.joinButton).toBeDisabled()
-    await joinPage.displayName.fill('A good guest')
-    await joinPage.page.keyboard.press('Enter')
-    await expect(joinPage.joinButton).toBeEnabled()
-    await joinPage.joinButton.click()
+      const audiencePage = new AudiencePage(page)
+      await page.waitForURL('/feedback', { waitUntil: 'networkidle' })
+      await expect(audiencePage.currentPresentationHeading).toContainText(presentationTitle)
+      await page.context().storageState({ path: joinedContextPath })
+    })
 
-    const audiencePage = new AudiencePage(page)
-    await page.waitForURL('/feedback', {waitUntil: 'networkidle'})
-    await expect(audiencePage.currentPresentationHeading).toContainText(presentationTitle)
-    await page.context().storageState({ path: joinedContextPath })
-  })
+    test('Should be possible to send a message', async ({ browser }) => {
+      const joinedContext = await browser.newContext({ storageState: joinedContextPath })
+      const page = await joinedContext.newPage()
+      const audiencePage = new AudiencePage(page)
 
-  test('Should be possible to send a message', async ({ browser }) => {
+      await audiencePage.goto()
 
-    const joinedContext = await browser.newContext({ storageState: joinedContextPath })
-    const page = await joinedContext.newPage()
-    const audiencePage = new AudiencePage(page)
+      await audiencePage.commentInput.fill('Can send via Enter')
+      await audiencePage.page.keyboard.press('Enter')
+      await expect(audiencePage.eventsList.locator('.speech-bubble')).toHaveText(
+        'Can send via Enter'
+      )
+      await audiencePage.commentInput.fill('Can send via Button')
+      await audiencePage.commentButton.click()
+      await expect(audiencePage.eventsList.locator('.speech-bubble')).toHaveText([
+        'Can send via Enter',
+        'Can send via Button'
+      ])
+    })
 
-    await audiencePage.goto()
+    test.afterAll(async ({ browser }) => {
+      const presenterContext = await browser.newContext({ storageState: presenterCredentialsFile })
+      const page = await presenterContext.newPage()
+      const presentationsPage = new PresentationsPage(page)
 
-    await audiencePage.commentInput.fill('Can send via Enter')
-    await audiencePage.page.keyboard.press('Enter')
-    await expect(audiencePage.eventsList.locator('.speech-bubble')).toHaveText('Can send via Enter')
-    await audiencePage.commentInput.fill('Can send via Button')
-    await audiencePage.commentButton.click()
-    await expect(audiencePage.eventsList.locator('.speech-bubble')).toHaveText(['Can send via Enter', 'Can send via Button'])
-  })
+      await presentationsPage.gotoPresentation(createdPresentationId)
 
-  test.afterAll(async ({ browser }) => {
-    const presenterContext = await browser.newContext({ storageState: presenterCredentialsFile })
-    const page = await presenterContext.newPage()
-    const presentationsPage = new PresentationsPage(page)
-
-    await presentationsPage.gotoPresentation(createdPresentationId)
-
-    // the deletion button is hidden, so we need to force the click
-    await presentationsPage.deletePresentationButton.click({ force: true })
+      // the deletion button is hidden, so we need to force the click
+      await presentationsPage.deletePresentationButton.click({ force: true })
+    })
   })
 })
