@@ -3,6 +3,9 @@ name: CI
 on:
   pull_request:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -16,7 +19,10 @@ jobs:
           cache: npm
       - run: npm ci --include=dev --include=prod
       - run: npm run build
-
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ./packages/frontend/dist
 
   verify-backend:
     runs-on: ubuntu-latest
@@ -92,9 +98,11 @@ jobs:
         working-directory: ./packages/frontend
         run: npx playwright install chromium --with-deps
 
-      - name: Build again
-        working-directory: ./packages/frontend
-        run: npm run build
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ./packages/frontend/dist
 
       - name: Execute end-to-end-tests
         working-directory: ./packages/frontend
