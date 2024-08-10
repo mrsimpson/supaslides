@@ -105,7 +105,7 @@ jobs:
           path: ./packages/frontend/dist
 
       - name: Execute end-to-end-tests
-        working-directory: ./packages/frontend/dist
+        working-directory: ./packages/frontend
         run: npm run test:e2e
         env:
           TEST_PRESENTER_EMAIL: test-presenter@local
