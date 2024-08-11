@@ -103,6 +103,10 @@ jobs:
         with:
           name: dist
           path: ./packages/frontend/dist
+      
+      - name: Display structure of downloaded files
+        working-directory: ./packages/frontend
+        run: ls -R 
 
       - name: Execute end-to-end-tests
         working-directory: ./packages/frontend
