@@ -6,13 +6,14 @@ on:
     types:
       - completed
 
+permissions:
+    contents: read
+    pages: write
+
 jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }} && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/deploy-prod')
     runs-on: ubuntu-latest
-    permissions:
-        contents: read
-        pages: write
 
     steps:
     - uses: actions/checkout@v3
