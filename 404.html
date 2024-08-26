@@ -1,0 +1,7 @@
+<script type="text/javascript">
+  // Redirect all 404s to index.html to allow Vue Router to handle the routing.
+  var path = window.location.pathname;
+  if (!path.includes("/index.html")) {
+    window.location.href = "/your-repo/index.html" + window.location.hash;
+  }
+</script>
