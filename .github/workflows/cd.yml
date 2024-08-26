@@ -44,6 +44,13 @@ jobs:
         SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdnlidWxxZGVtdGJ4bnp0c3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY3OTgxMjgsImV4cCI6MjAzMjM3NDEyOH0.BKTRrISwv4NXGHc8OkpAmTFxlXChxVN9PrlTdKHrYaQ
         SUPABASE_API_URL: https://ksvybulqdemtbxnztsrw.supabase.co
 
+    - name: Create status file
+      working-directory: ./packages/frontend/dist
+      run: |
+        echo "Commit Hash: $(git rev-parse HEAD)" > status
+        echo "Commit Time: $(git show -s --format=%ci HEAD)" >> status
+        echo "Commit Author: $(git show -s --format=%an HEAD)" >> status
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
 
