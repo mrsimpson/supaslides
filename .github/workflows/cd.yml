@@ -46,13 +46,14 @@ jobs:
 
     - name: Create redirect file
       # this is necessary to direct all paths to the vue router
+      working-directory: ./packages/frontend
       run: |
         echo '<script type="text/javascript">' > dist/404.html
         echo 'var path = window.location.pathname;' >> dist/404.html
         echo 'if (!path.includes("/index.html")) {' >> dist/404.html
         echo '  window.location.href = "/index.html" + window.location.hash;' >> dist/404.html
         echo '}' >> dist/404.html
-        echo '</script>' >> ./packages/frontend/dist/404.html
+        echo '</script>' >> dist/404.html
 
     - name: Setup Pages
       uses: actions/configure-pages@v4
