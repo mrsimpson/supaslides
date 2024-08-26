@@ -52,7 +52,7 @@ jobs:
         echo 'if (!path.includes("/index.html")) {' >> dist/404.html
         echo '  window.location.href = "/index.html" + window.location.hash;' >> dist/404.html
         echo '}' >> dist/404.html
-        echo '</script>' >> dist/404.html
+        echo '</script>' >> ./packages/frontend/dist/404.html
 
     - name: Setup Pages
       uses: actions/configure-pages@v4
