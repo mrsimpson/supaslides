@@ -6,17 +6,27 @@ on:
     types:
       - completed
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
 permissions:
-    contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/deploy-prod')
+    if: ${{ github.event.workflow_run.conclusion == 'success' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/deploy-prod') }}
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-
 
     - uses: actions/setup-node@v4
       with:
@@ -34,8 +44,15 @@ jobs:
         SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdnlidWxxZGVtdGJ4bnp0c3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY3OTgxMjgsImV4cCI6MjAzMjM3NDEyOH0.BKTRrISwv4NXGHc8OkpAmTFxlXChxVN9PrlTdKHrYaQ
         SUPABASE_API_URL: https://ksvybulqdemtbxnztsrw.supabase.co
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v4
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./packages/frontend/dist
+        # Upload dist folder
+        path: './packages/frontend/dist'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
