@@ -231,5 +231,5 @@ function handlePresentationOpen() {
 }
 
 const getParticipationUrl = () =>
-  window.location.origin + '/join?code=' + props.presentation?.join_code
+  window.location.origin + '/#/join?code=' + props.presentation?.join_code
 </script>
