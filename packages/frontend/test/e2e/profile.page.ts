@@ -20,7 +20,7 @@ export class ProfilePage extends BasePage {
   }
 
   public async goto(): Promise<void> {
-    await super.goto('/me')
+    await super.goto('/#/me')
   }
 
   public async isProfileLoaded(): Promise<void> {

@@ -1,10 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
   graphql_public: {
@@ -43,7 +37,7 @@ export type Database = {
           id: number
           is_public: boolean
           presentation: number
-          type: Database["public"]["Enums"]["event_type"]
+          type: Database['public']['Enums']['event_type']
           value: Json | null
         }
         Insert: {
@@ -54,7 +48,7 @@ export type Database = {
           id?: number
           is_public?: boolean
           presentation: number
-          type: Database["public"]["Enums"]["event_type"]
+          type: Database['public']['Enums']['event_type']
           value?: Json | null
         }
         Update: {
@@ -65,24 +59,24 @@ export type Database = {
           id?: number
           is_public?: boolean
           presentation?: number
-          type?: Database["public"]["Enums"]["event_type"]
+          type?: Database['public']['Enums']['event_type']
           value?: Json | null
         }
         Relationships: [
           {
-            foreignKeyName: "presentation_events_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: 'presentation_events_created_by_fkey'
+            columns: ['created_by']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "presentation_events_presentation_fkey"
-            columns: ["presentation"]
+            foreignKeyName: 'presentation_events_presentation_fkey'
+            columns: ['presentation']
             isOneToOne: false
-            referencedRelation: "presentations"
-            referencedColumns: ["id"]
-          },
+            referencedRelation: 'presentations'
+            referencedColumns: ['id']
+          }
         ]
       }
       presentations: {
@@ -91,7 +85,7 @@ export type Database = {
           description: string | null
           id: number
           join_code: string | null
-          lc_status: Database["public"]["Enums"]["presentation_lifecycle_status"]
+          lc_status: Database['public']['Enums']['presentation_lifecycle_status']
           presenter: string
           title: string | null
         }
@@ -100,7 +94,7 @@ export type Database = {
           description?: string | null
           id?: number
           join_code?: string | null
-          lc_status?: Database["public"]["Enums"]["presentation_lifecycle_status"]
+          lc_status?: Database['public']['Enums']['presentation_lifecycle_status']
           presenter?: string
           title?: string | null
         }
@@ -109,18 +103,18 @@ export type Database = {
           description?: string | null
           id?: number
           join_code?: string | null
-          lc_status?: Database["public"]["Enums"]["presentation_lifecycle_status"]
+          lc_status?: Database['public']['Enums']['presentation_lifecycle_status']
           presenter?: string
           title?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "presentation_presenter_fkey"
-            columns: ["presenter"]
+            foreignKeyName: 'presentation_presenter_fkey'
+            columns: ['presenter']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          }
         ]
       }
       profiles: {
@@ -150,12 +144,12 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
+            foreignKeyName: 'profiles_id_fkey'
+            columns: ['id']
             isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          }
         ]
       }
     }
@@ -176,25 +170,25 @@ export type Database = {
           u_user_uuid?: string
           u_user_anon_uuid?: string
         }
-        Returns: Database["public"]["CompositeTypes"]["generic_acknowledgement_type"]
+        Returns: Database['public']['CompositeTypes']['generic_acknowledgement_type']
       }
       presentation_peek: {
         Args: {
           t_join_code: string
         }
-        Returns: Database["public"]["CompositeTypes"]["presentation_peek_type"]
+        Returns: Database['public']['CompositeTypes']['presentation_peek_type']
       }
       presentation_start: {
         Args: {
           n_presentation: number
         }
-        Returns: Database["public"]["CompositeTypes"]["generic_acknowledgement_type"]
+        Returns: Database['public']['CompositeTypes']['generic_acknowledgement_type']
       }
       presentation_stop: {
         Args: {
           n_presentation: number
         }
-        Returns: Database["public"]["CompositeTypes"]["generic_acknowledgement_type"]
+        Returns: Database['public']['CompositeTypes']['generic_acknowledgement_type']
       }
       send_reaction: {
         Args: {
@@ -204,22 +198,18 @@ export type Database = {
           u_user_uuid?: string
           u_user_anon_uuid?: string
         }
-        Returns: Database["public"]["CompositeTypes"]["generic_acknowledgement_type"]
+        Returns: Database['public']['CompositeTypes']['generic_acknowledgement_type']
       }
     }
     Enums: {
       event_type:
-        | "presentation_start"
-        | "presentation_stop"
-        | "reaction"
-        | "comment"
-        | "slide_change"
-        | "user_joined"
-      presentation_lifecycle_status:
-        | "prepared"
-        | "started"
-        | "stopped"
-        | "archived"
+        | 'presentation_start'
+        | 'presentation_stop'
+        | 'reaction'
+        | 'comment'
+        | 'slide_change'
+        | 'user_joined'
+      presentation_lifecycle_status: 'prepared' | 'started' | 'stopped' | 'archived'
     }
     CompositeTypes: {
       generic_acknowledgement_type: {
@@ -231,9 +221,7 @@ export type Database = {
         id: number | null
         title: string | null
         description: string | null
-        lc_status:
-          | Database["public"]["Enums"]["presentation_lifecycle_status"]
-          | null
+        lc_status: Database['public']['Enums']['presentation_lifecycle_status'] | null
         presenter_username: string | null
         presenter_fullname: string | null
       }
@@ -343,12 +331,12 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "objects_bucketId_fkey"
-            columns: ["bucket_id"]
+            foreignKeyName: 'objects_bucketId_fkey'
+            columns: ['bucket_id']
             isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          },
+            referencedRelation: 'buckets'
+            referencedColumns: ['id']
+          }
         ]
       }
       s3_multipart_uploads: {
@@ -384,12 +372,12 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "s3_multipart_uploads_bucket_id_fkey"
-            columns: ["bucket_id"]
+            foreignKeyName: 's3_multipart_uploads_bucket_id_fkey'
+            columns: ['bucket_id']
             isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
-          },
+            referencedRelation: 'buckets'
+            referencedColumns: ['id']
+          }
         ]
       }
       s3_multipart_uploads_parts: {
@@ -431,19 +419,19 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "s3_multipart_uploads_parts_bucket_id_fkey"
-            columns: ["bucket_id"]
+            foreignKeyName: 's3_multipart_uploads_parts_bucket_id_fkey'
+            columns: ['bucket_id']
             isOneToOne: false
-            referencedRelation: "buckets"
-            referencedColumns: ["id"]
+            referencedRelation: 'buckets'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "s3_multipart_uploads_parts_upload_id_fkey"
-            columns: ["upload_id"]
+            foreignKeyName: 's3_multipart_uploads_parts_upload_id_fkey'
+            columns: ['upload_id']
             isOneToOne: false
-            referencedRelation: "s3_multipart_uploads"
-            referencedColumns: ["id"]
-          },
+            referencedRelation: 's3_multipart_uploads'
+            referencedColumns: ['id']
+          }
         ]
       }
     }
@@ -546,27 +534,25 @@ export type Database = {
   }
 }
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type PublicSchema = Database[Extract<keyof Database, 'public'>]
 
 export type Tables<
   PublicTableNameOrOptions extends
-    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+    | keyof (PublicSchema['Tables'] & PublicSchema['Views'])
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+        Database[PublicTableNameOrOptions['schema']]['Views'])
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+      Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-        PublicSchema["Views"])
-    ? (PublicSchema["Tables"] &
-        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof (PublicSchema['Tables'] & PublicSchema['Views'])
+    ? (PublicSchema['Tables'] & PublicSchema['Views'])[PublicTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -574,20 +560,18 @@ export type Tables<
     : never
 
 export type TablesInsert<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
-    | { schema: keyof Database },
+  PublicTableNameOrOptions extends keyof PublicSchema['Tables'] | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+    ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -595,20 +579,18 @@ export type TablesInsert<
     : never
 
 export type TablesUpdate<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
-    | { schema: keyof Database },
+  PublicTableNameOrOptions extends keyof PublicSchema['Tables'] | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+    ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -616,15 +598,12 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  PublicEnumNameOrOptions extends
-    | keyof PublicSchema["Enums"]
-    | { schema: keyof Database },
+  PublicEnumNameOrOptions extends keyof PublicSchema['Enums'] | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    ? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
+    : never = never
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+  ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
+    ? PublicSchema['Enums'][PublicEnumNameOrOptions]
     : never
-

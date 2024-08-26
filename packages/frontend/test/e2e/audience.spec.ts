@@ -53,7 +53,7 @@ import { AudiencePage } from './audience.page.js'
       await joinPage.joinButton.click()
 
       const audiencePage = new AudiencePage(page)
-      await page.waitForURL('/feedback', { waitUntil: 'networkidle' })
+      await page.waitForURL('/#/feedback', { waitUntil: 'networkidle' })
       await expect(audiencePage.currentPresentationHeading).toContainText(presentationTitle)
       await page.context().storageState({ path: joinedContextPath })
     })

@@ -18,6 +18,6 @@ export class JoinPage extends BasePage {
   }
 
   public async goto(joinCode: string): Promise<void> {
-    await super.goto(`/join/?code=${joinCode}`)
+    await super.goto(`/#/join/?code=${joinCode}`)
   }
 }

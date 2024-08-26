@@ -1,12 +1,24 @@
 <template>
   <n-space size="large" vertical>
-    <n-card v-if="presentation" :title="presentation.title || 'an untitled presentation'" embedded data-testid="text-presentation-title">
+    <n-card
+      v-if="presentation"
+      :title="presentation.title || 'an untitled presentation'"
+      embedded
+      data-testid="text-presentation-title"
+    >
       <template #header><p>Jou are invited to join</p></template>
       <h3 v-if="presenterName" data-testid="text-presentation-presenter">by {{ presenterName }}</h3>
-      <p v-if="presentation.description" data-testid="text-presentation-description">{{ presentation.description }}</p>
+      <p v-if="presentation.description" data-testid="text-presentation-description">
+        {{ presentation.description }}
+      </p>
       <template #action>
         <DisplayNameForm />
-        <NButton :disabled="!displayName" primary type="primary" @click.prevent="handleJoin" data-testid="button-join"
+        <NButton
+          :disabled="!displayName"
+          primary
+          type="primary"
+          @click.prevent="handleJoin"
+          data-testid="button-join"
           >Join!</NButton
         >
       </template>

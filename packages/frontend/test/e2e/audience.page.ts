@@ -17,6 +17,6 @@ export class AudiencePage extends BasePage {
   }
 
   public async goto(): Promise<void> {
-    await super.goto('/feedback')
+    await super.goto('/#/feedback')
   }
 }

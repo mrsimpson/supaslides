@@ -4,62 +4,59 @@
       <!-- <Avatar :path="formValue.avatar_url" @upload="updateProfile" />-->
       <n-form-item :label="t('email_label')">
         <NInput
-            id="email"
-            :value="session?.user.email"
-            data-testid="input-account-email"
-            disabled
-            type="text"
+          id="email"
+          :value="session?.user.email"
+          data-testid="input-account-email"
+          disabled
+          type="text"
         />
       </n-form-item>
       <n-form-item :label="t('username_label')" path="username">
         <n-input
-            id="username"
-            v-model:value="formValue.username"
-            data-testid="input-account-username"
-            placeholder="Enter your username"
-            type="text"
+          id="username"
+          v-model:value="formValue.username"
+          data-testid="input-account-username"
+          placeholder="Enter your username"
+          type="text"
         />
       </n-form-item>
       <n-form-item :label="t('website_label')" path="website">
         <n-input
-            id="website"
-            v-model:value="formValue.website"
-            data-testid="input-account-website"
-            placeholder="Enter your website URL"
-            type="text"
+          id="website"
+          v-model:value="formValue.website"
+          data-testid="input-account-website"
+          placeholder="Enter your website URL"
+          type="text"
         />
       </n-form-item>
       <n-form-item>
         <n-button
-            :disabled="loading"
-            data-testid="button-account-updateProfile"
-            @click.prevent="changeProfile"
+          :disabled="loading"
+          data-testid="button-account-updateProfile"
+          @click.prevent="changeProfile"
         >
-          {{
-            t('update_button')
-          }}
+          {{ t('update_button') }}
         </n-button>
       </n-form-item>
     </n-form>
     <n-form-item>
-      <n-button data-testid="button-account-signOut" type="error" @click="logOut">{{
-          t('sign_out_button')
-        }}
+      <n-button data-testid="button-account-signOut" type="error" @click="logOut"
+        >{{ t('sign_out_button') }}
       </n-button>
     </n-form-item>
   </n-card>
 </template>
 
 <script lang="ts" setup>
-import {onMounted, ref} from 'vue'
+import { onMounted, ref } from 'vue'
 import router from '@/router'
-import {useUserSessionStore} from '@/stores/userSession'
-import {type FormInst, useMessage} from 'naive-ui'
-import {useI18n} from 'vue-i18n'
-import type {Profile} from "@/api/types/entities";
+import { useUserSessionStore } from '@/stores/userSession'
+import { type FormInst, useMessage } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
+import type { Profile } from '@/api/types/entities'
 
 const loading = ref(true)
-const {session, fetchProfile, updateProfile, signOut} = useUserSessionStore()
+const { session, fetchProfile, updateProfile, signOut } = useUserSessionStore()
 const formRef = ref<FormInst | null>(null)
 const message = useMessage()
 const formValue = ref({
@@ -68,7 +65,7 @@ const formValue = ref({
   avatar_url: '' as string | null
 })
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 const rules = {
   username: {
@@ -93,7 +90,7 @@ async function getProfile() {
     return
   }
 
-  const {user} = session
+  const { user } = session
 
   try {
     loading.value = true
@@ -121,7 +118,7 @@ async function changeProfile(e: Event) {
     if (session && session.user) {
       loading.value = true
 
-      const {user} = session
+      const { user } = session
 
       const updates = {
         id: user.id,

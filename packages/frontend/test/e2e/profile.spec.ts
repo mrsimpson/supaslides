@@ -35,7 +35,7 @@ test('Should be able to log out', async ({ page }) => {
 
   await profilePage.signOutButton.click()
   //should be redirected to root
-  await profilePage.page.waitForURL('/')
+  await profilePage.page.waitForURL('/#/')
   await profilePage.goto()
   await expect(profilePage.signInEmail).toBeEditable()
 })

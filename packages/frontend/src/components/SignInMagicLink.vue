@@ -2,11 +2,11 @@
   <NCard title="Magic Link Signin" :bordered="false">
     <NForm inline ref="formRef" :model="formValue" :rules="rules" @submit="handleMagicLinkSignin">
       <NFormItem label="E-mail" path="email">
-        <NInput v-model:value="formValue.email" placeholder="your email"/>
+        <NInput v-model:value="formValue.email" placeholder="your email" />
       </NFormItem>
       <NFormItem>
         <NButton @click="handleMagicLinkSignin" :loading="loading" :disabled="loading"
-        >{{ loading ? 'Loading' : 'Send magic link' }}
+          >{{ loading ? 'Loading' : 'Send magic link' }}
         </NButton>
       </NFormItem>
     </NForm>
@@ -14,13 +14,13 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
-import type {FormInst} from 'naive-ui'
-import {NButton, NCard, NForm, NFormItem, NInput, useMessage} from 'naive-ui'
-import {useUserSessionStore} from "@/stores/userSession";
+import { ref } from 'vue'
+import type { FormInst } from 'naive-ui'
+import { NButton, NCard, NForm, NFormItem, NInput, useMessage } from 'naive-ui'
+import { useUserSessionStore } from '@/stores/userSession'
 
 const loading = ref(false)
-const {signInWithMagicLink} = useUserSessionStore()
+const { signInWithMagicLink } = useUserSessionStore()
 
 const formRef = ref<FormInst | null>(null)
 const message = useMessage()

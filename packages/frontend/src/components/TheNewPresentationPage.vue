@@ -63,6 +63,10 @@ const rules = {
 
 async function handleSubmit() {
   const newPresentation = await createPresentation(formValue.value)
-  await router.push(`/presentations/${newPresentation?.id}`)
+  // await router.push(`/presentations/${newPresentation?.id}`)
+  await router.push({
+    name: 'presentation',
+    params: { presentationId: newPresentation?.id }
+  })
 }
 </script>

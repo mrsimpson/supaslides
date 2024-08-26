@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import type {EventType} from "@/api/types/entities";
+import type { EventType } from '@/api/types/entities'
 
 const props = defineProps<{ isMine: boolean; eventType: EventType }>()
 </script>

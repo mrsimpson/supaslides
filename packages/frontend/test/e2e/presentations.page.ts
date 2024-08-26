@@ -42,10 +42,10 @@ export class PresentationsPage extends BasePage {
   }
 
   public async goto(): Promise<void> {
-    await super.goto('/presentations')
+    await super.goto('/#/presentations')
   }
 
   public async gotoPresentation(presentationId: string) {
-    await super.goto(`/presentations/${presentationId}`)
+    await super.goto(`/#/presentations/${presentationId}`)
   }
 }
