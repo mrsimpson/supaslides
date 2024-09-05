@@ -36,6 +36,7 @@ jobs:
       working-directory: ./packages/frontend
       run: npm run test:e2e
       env:
+        BASE_URL: https://supaslides.dev
         TEST_PRESENTER_EMAIL: ${{ secrets.TEST_AUDIENCE_EMAIL }}
         TEST_PRESENTER_PASSWORD: ${{ secrets.TEST_PRESENTER_PASSWORD }}
         TEST_AUDIENCE_EMAIL: ${{ secrets.TEST_AUDIENCE_EMAIL }}
