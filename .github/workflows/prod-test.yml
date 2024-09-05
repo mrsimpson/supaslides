@@ -22,6 +22,16 @@ jobs:
       with:
         node-version: 20
         cache: npm
+
+    - name: Install only dev dependencies
+      working-directory: ./packages/frontend
+      run: npm ci --include=dev
+
+    - name: Install Playwright
+      working-directory: ./packages/frontend
+      run: npx playwright install chromium --with-deps
+
+
     - name: Execute end-to-end-tests on the production environment
       working-directory: ./packages/frontend
       run: npm run test:e2e
