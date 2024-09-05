@@ -36,9 +36,17 @@ jobs:
       working-directory: ./packages/frontend
       run: npm run test:e2e
       env:
-        TEST_PRESENTER_EMAIL: test-presenter@local
-        TEST_PRESENTER_PASSWORD: presenter
-        TEST_AUDIENCE_EMAIL: test-audience@local
-        TEST_AUDIENCE_PASSWORD: audience
+        TEST_PRESENTER_EMAIL: ${{ secrets.TEST_AUDIENCE_EMAIL }}
+        TEST_PRESENTER_PASSWORD: ${{ secrets.TEST_PRESENTER_PASSWORD }}
+        TEST_AUDIENCE_EMAIL: ${{ secrets.TEST_AUDIENCE_EMAIL }}
+        TEST_AUDIENCE_PASSWORD: ${{ secrets. TEST_AUDIENCE_PASSWORD }}
         SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdnlidWxxZGVtdGJ4bnp0c3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY3OTgxMjgsImV4cCI6MjAzMjM3NDEyOH0.BKTRrISwv4NXGHc8OkpAmTFxlXChxVN9PrlTdKHrYaQ
         SUPABASE_API_URL: https://ksvybulqdemtbxnztsrw.supabase.co
+
+    - name: Store test results
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: ./packages/frontend/playwright-report/
+        retention-days: 30
