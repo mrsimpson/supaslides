@@ -8,8 +8,7 @@ const audienceEmail = process.env.TEST_AUDIENCE_EMAIL!
 const audiencePassword = process.env.TEST_AUDIENCE_PASSWORD!
 
 async function signIn(page: Page, email: string, password: string, credentialsFile: string) {
-  // Perform authentication steps. Replace these actions with your own.
-  await page.goto('http://localhost:5173/#/me')
+  await page.goto('/me')
   await expect(page.getByTestId('input-signin-email')).toBeVisible()
   await page.getByTestId('input-signin-email').getByRole('textbox').fill(email)
   await page.getByTestId('input-signin-password').getByRole('textbox').fill(password)
