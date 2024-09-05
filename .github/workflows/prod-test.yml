@@ -1,0 +1,36 @@
+name: CD
+
+on:
+  workflow_run:
+
+# Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
+
+# Allow one concurrent test
+concurrency:
+  group: 'prod-test'
+  cancel-in-progress: true
+
+jobs:
+  prod-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: npm
+    - name: Execute end-to-end-tests on the production environment
+      working-directory: ./packages/frontend
+      run: npm run test:e2e
+      env:
+        TEST_PRESENTER_EMAIL: test-presenter@local
+        TEST_PRESENTER_PASSWORD: presenter
+        TEST_AUDIENCE_EMAIL: test-audience@local
+        TEST_AUDIENCE_PASSWORD: audience
+        SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdnlidWxxZGVtdGJ4bnp0c3J3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY3OTgxMjgsImV4cCI6MjAzMjM3NDEyOH0.BKTRrISwv4NXGHc8OkpAmTFxlXChxVN9PrlTdKHrYaQ
+        SUPABASE_API_URL: https://ksvybulqdemtbxnztsrw.supabase.co
