@@ -1,48 +1,48 @@
 <template>
-  <n-flex v-if="presentation" :style="{ maxHeight: totalHeight }" vertical>
-    <NCard bordered embedded size="large">
+  <div v-if="presentation" class="presenter-view">
+    <div class="header">
       <PresentationFactsheet
-        :presentation="presentation"
-        :show-embedding="false"
-        :show-open="false"
+          :presentation="presentation"
+          :show-embedding="false"
+          :show-open="false"
       />
-    </NCard>
-    <BroadcastForm :presentation="presentation" />
-    <PresentationEventsTimeline
-      :events="myPresentationEvents"
-      :my-anon-uuid="anonUuid"
-      :my-user-id="session?.user.id"
-    />
-  </n-flex>
+      <BroadcastForm :presentation="presentation"/>
+    </div>
+    <div class="events-container">
+      <PresentationEventsTimeline
+          :events="myPresentationEvents"
+          :my-anon-uuid="anonUuid"
+          :my-user-id="session?.user.id"
+      />
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import PresentationFactsheet from '@/components/PresentationFactsheet.vue'
-import { usePresenterStore } from '@/stores/presenter'
-import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref, watch } from 'vue'
-import { useUserSessionStore } from '@/stores/userSession'
+import {usePresenterStore} from '@/stores/presenter'
+import {storeToRefs} from 'pinia'
+import {onMounted, ref, watch} from 'vue'
+import {useUserSessionStore} from '@/stores/userSession'
 import PresentationEventsTimeline from '@/components/PresentationEventsTimeline.vue'
-import { useRouter } from 'vue-router'
-import type { Presentation } from 'src/api/types/entities'
+import {useRouter} from 'vue-router'
+import type {Presentation} from 'src/api/types/entities'
 import BroadcastForm from '@/components/BroadcastForm.vue'
 import router from '@/router'
 
-const { isSignedIn, anonUuid, session } = storeToRefs(useUserSessionStore())
+const {isSignedIn, anonUuid, session} = storeToRefs(useUserSessionStore())
 
 let presenterStore = usePresenterStore()
-const { currentPresentation, myPresentations, isInitialized, myPresentationEvents } =
-  storeToRefs(presenterStore)
+const {currentPresentation, myPresentations, isInitialized, myPresentationEvents} =
+    storeToRefs(presenterStore)
 
-const { currentRoute } = useRouter()
+const {currentRoute} = useRouter()
 
 const presentationId = () => parseInt(<string>currentRoute.value.params.presentationId)
 
 const isPresentationCurrentOne = () => {
   return currentPresentation.value?.id && presentationId() === currentPresentation?.value.id
 }
-
-const totalHeight = computed(() => `${window.innerHeight - 200}px`)
 
 let presentation = ref<Presentation | null>()
 
@@ -61,3 +61,25 @@ onMounted(() => {
   setPresentationFromRoute()
 })
 </script>
+
+<style scoped>
+
+.presenter-view {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  width: 100%;
+}
+
+.header {
+  flex: 0 0 auto;
+  padding: 1rem;
+}
+
+.events-container {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 1rem;
+}
+</style>

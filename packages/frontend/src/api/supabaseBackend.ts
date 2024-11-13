@@ -1,4 +1,4 @@
-import type { Backend } from './Backend'
+import type {Backend} from './Backend'
 import type {
   CreatePresentation,
   CreatePresentationEvent,
@@ -8,7 +8,7 @@ import type {
   PresentationPeek,
   Profile
 } from './types/entities'
-import type { Database } from './types/database'
+import type {Database} from './types/database'
 import {
   createClient,
   type PostgrestError,
@@ -17,7 +17,6 @@ import {
   type RealtimePostgresChangesPayload,
   type SupabaseClient
 } from '@supabase/supabase-js'
-import * as console from 'node:console'
 
 class SupabaseBackend implements Backend {
   private static client: SupabaseClient
@@ -41,11 +40,8 @@ class SupabaseBackend implements Backend {
           table: 'presentation_events',
           filter: `presentation=eq.${presentationId}`
         },
-        (payload: RealtimePostgresChangesPayload<PresentationEvent>) => {
-          if (payload.new && (payload.new.is_public || payload.eventType === 'INSERT')) {
-            callback(payload.new)
-          }
-        }
+        (payload: RealtimePostgresChangesPayload<PresentationEvent>) =>
+          callback(<PresentationEvent>payload.new)
       )
       .subscribe()
 
@@ -216,6 +212,7 @@ class SupabaseBackend implements Backend {
     const response = await SupabaseBackend.client.rpc('presentation_start', {
       n_presentation: presentationId
     })
+    return response.data
   }
 
   async stopPresentation(presentationId: Presentation['id']) {
