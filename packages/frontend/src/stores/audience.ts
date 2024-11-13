@@ -50,9 +50,11 @@ export const useAudienceStore = defineStore('audienceStore', {
     },
     listenToPresentationEvents() {
       backend.listenToPresentationEvents(this.currentPresentationId, (event) => {
-        if (this.myEvents.findIndex((e) => e.id === event.id) >= 0) {
-          // don't echo own events
-          this.publicEvents.push(event)
+        // Only add event if it's not our own and either public or from the presenter
+        if (!this.myEvents.find(e => e.id === event.id)) {
+          if (event.is_public) {
+            this.publicEvents.push(event)
+          }
         }
       })
     },

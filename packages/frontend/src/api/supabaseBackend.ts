@@ -30,6 +30,7 @@ class SupabaseBackend implements Backend {
     presentationId: Presentation['id'],
     callback: (event: PresentationEvent) => void
   ): void {
+    // Listen for database changes
     SupabaseBackend.client
       .channel('presentation_events')
       .on(
@@ -40,10 +41,15 @@ class SupabaseBackend implements Backend {
           table: 'presentation_events',
           filter: `presentation=eq.${presentationId}`
         },
-        (payload: RealtimePostgresChangesPayload<PresentationEvent>) =>
-          callback(<PresentationEvent>payload.new)
+        (payload: RealtimePostgresChangesPayload<PresentationEvent>) => {
+          if (payload.new && (payload.new.is_public || payload.eventType === 'INSERT')) {
+            callback(payload.new)
+          }
+        }
       )
       .subscribe()
+
+    // Listen for broadcast events
     const presentationBroadcastChannel = SupabaseBackend.client.channel(
       this.getRealtimeChannelName(presentationId)
     )
@@ -53,7 +59,7 @@ class SupabaseBackend implements Backend {
           REALTIME_LISTEN_TYPES.BROADCAST,
           { event: 'presentation_event' },
           (event) => {
-            if (event) {
+            if (event && event.payload) {
               callback(event.payload)
             }
           }
@@ -210,9 +216,6 @@ class SupabaseBackend implements Backend {
     const response = await SupabaseBackend.client.rpc('presentation_start', {
       n_presentation: presentationId
     })
-    const { error, data: acknowledgment } = response
-    this.handlePostgrestError(error)
-    return acknowledgment
   }
 
   async stopPresentation(presentationId: Presentation['id']) {
