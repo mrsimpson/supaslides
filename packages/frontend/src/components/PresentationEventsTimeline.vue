@@ -1,27 +1,27 @@
 <template>
-  <n-divider />
+  <n-divider/>
   <div ref="listContainer" class="list-container" data-testid="container-event-list">
     <div
-      v-for="event in sortedEvents"
-      :key="event.id"
-      :class="`list-item`"
-      :style="{ flexDirection: isMyEvent(event) ? 'row-reverse' : 'row' }"
+        v-for="event in sortedEvents"
+        :key="event.id"
+        :class="`list-item`"
+        :style="{ flexDirection: isMyEvent(event) ? 'row-reverse' : 'row' }"
     >
-      <EventRenderer :event="event" :is-mine="isMyEvent(event)" />
+      <EventRenderer :event="event" :is-mine="isMyEvent(event)"/>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { PresentationEvent } from 'src/api/types/entities'
-import { computed, nextTick, onMounted, type PropType, ref, watch } from 'vue'
+import type {PresentationEvent} from 'src/api/types/entities'
+import {computed, nextTick, onMounted, type PropType, ref, watch} from 'vue'
 import EventRenderer from '@/components/EventRenderer.vue'
 import Sorting from '@/types/Sorting'
 
 const props = defineProps({
-  events: { type: Array as () => PresentationEvent[], required: true },
-  myUserId: { type: String, required: false },
-  myAnonUuid: { type: String, required: false },
+  events: {type: Array as () => PresentationEvent[], required: true},
+  myUserId: {type: String, required: false},
+  myAnonUuid: {type: String, required: false},
   sorting: {
     type: String as PropType<Sorting>,
     default: Sorting.NewestTop,
@@ -40,7 +40,7 @@ async function scroll() {
 }
 
 onMounted(scroll)
-watch(() => props.events, scroll, { deep: true })
+watch(() => props.events, scroll, {deep: true})
 
 function isMyEvent(event: PresentationEvent) {
   return event.created_by_anon_uuid === props.myAnonUuid || event.created_by === props.myUserId
@@ -48,9 +48,9 @@ function isMyEvent(event: PresentationEvent) {
 
 const sortedEvents = computed(() => {
   return [...props.events].sort(
-    (a, b) =>
-      (new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) *
-      (props.sorting === Sorting.NewestBottom ? -1 : 1)
+      (a, b) =>
+          (new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) *
+          (props.sorting === Sorting.NewestBottom ? -1 : 1)
   )
 })
 </script>
@@ -58,11 +58,19 @@ const sortedEvents = computed(() => {
 <style scoped>
 .list-container {
   flex: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0;
 }
 
 .list-item {
   display: flex;
-  margin-bottom: 4px;
+  padding: 0.25rem 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .list-container {
+    padding: 0;
+  }
 }
 </style>

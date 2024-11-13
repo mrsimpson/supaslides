@@ -1,21 +1,20 @@
 <template>
   <div
-    :class="`event-wrapper ${eventType}`"
-    :style="{ flexDirection: isMine ? 'row-reverse' : 'row' }"
+      :class="['event-wrapper', eventType]" :style="{ flexDirection: isMine ? 'row-reverse' : 'row' }"
   >
     <n-icon class="type-icon" size="1.5rem">
-      <slot name="icon" />
+      <slot name="icon"/>
     </n-icon>
     <div>
-      <slot name="content" />
+      <slot name="content"/>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { EventType } from '@/api/types/entities'
+import type {EventType} from '@/api/types/entities'
 
-const props = defineProps<{ isMine: boolean; eventType: EventType }>()
+defineProps<{ isMine: boolean; eventType: EventType }>()
 </script>
 
 <style lang="css" scoped>
@@ -25,7 +24,6 @@ const props = defineProps<{ isMine: boolean; eventType: EventType }>()
 }
 
 .type-icon {
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 0 20px;
 }
 </style>

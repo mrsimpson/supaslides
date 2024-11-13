@@ -12,12 +12,10 @@
         >
           <TheNavigation />
         </n-layout-sider>
-        <n-layout-content class="full-height">
+        <n-layout-content>
           <n-message-provider>
             <n-space vertical>
-              <n-card centered>
-                <RouterView />
-              </n-card>
+              <RouterView />
             </n-space>
           </n-message-provider>
         </n-layout-content>
@@ -32,7 +30,6 @@ import {
   darkTheme,
   type GlobalTheme,
   type GlobalThemeOverrides,
-  NCard,
   NConfigProvider,
   NLayout,
   NLayoutContent,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Information as InformationIcon } from '@vicons/carbon'
-import { isSmallScreen } from '@/lib/responsiveness'
+import {Information as InformationIcon} from '@vicons/carbon'
+import {isNarrowScreen} from '@/lib/responsiveness'
 
 type displayType = 'inline' | 'icon'
 
@@ -12,7 +12,7 @@ defineProps<{
 </script>
 
 <template>
-  <n-tooltip trigger="hover" v-if="display === 'icon'" :width="isSmallScreen ? 300 : 600">
+  <n-tooltip trigger="hover" v-if="display === 'icon'" :width="isNarrowScreen ? 300 : 600">
     <template #trigger>
       <n-button
         text
@@ -43,7 +43,4 @@ defineProps<{
   font-style: italic;
 }
 
-.n-icon-slot {
-  position-y: 0px;
-}
 </style>
