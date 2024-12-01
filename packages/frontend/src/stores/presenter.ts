@@ -22,6 +22,7 @@ export interface PresenterState {
   myPresentationEvents: PresentationEvent[]
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function handleAcknowledgement<Database, SchemaName>(
   acknowledgment: Acknowledgement,
   presentationId: number

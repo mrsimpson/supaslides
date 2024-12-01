@@ -34,17 +34,16 @@
 import { usePresenterStore } from '@/stores/presenter'
 import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
-import { type FormInst, useMessage } from 'naive-ui'
+import { type FormInst } from 'naive-ui'
 import type { CreatePresentation } from '@/api/types/entities'
 import { useRouter } from 'vue-router'
 
-const { createPresentation, setActivePresentation } = usePresenterStore()
+const { createPresentation } = usePresenterStore()
 
 const { t } = useI18n()
 const router = useRouter()
 
 const formRef = ref<FormInst | null>(null)
-const message = useMessage()
 const formValue = ref({
   title: '' as string | null,
   description: '' as string | null

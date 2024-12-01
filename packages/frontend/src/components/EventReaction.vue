@@ -11,7 +11,6 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 import type { SpecificPresentationEvent } from 'src/api/types/entities.js'
 import AvatarIcon from '@/components/AvatarIcon.vue'
 import EventWithIconWrapper from '@/components/EventWithIconWrapper.vue'
@@ -22,7 +21,6 @@ const props = defineProps<{
   isMine: boolean
 }>()
 
-const { t } = useI18n()
 const event = ref(props.event)
 let displayName = ref<string | undefined>(undefined)
 

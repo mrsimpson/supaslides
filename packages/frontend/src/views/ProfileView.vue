@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { useUserSessionStore } from '@/stores/userSession'
 import SignIn from '@/components/SignIn.vue'
-import Account from '@/components/Account.vue'
+import Account from '@/components/AccountForm.vue'
 import { storeToRefs } from 'pinia'
 
 const { session } = storeToRefs(useUserSessionStore())

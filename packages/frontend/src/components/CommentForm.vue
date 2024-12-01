@@ -2,16 +2,16 @@
   <n-form ref="formRef" :model="formValue" inline @submit="sendComment">
     <n-form-item class="form-input" path="commentText">
       <n-input
-        v-model:value="formValue.commentText"
-        :placeholder="t('comment_placeholder')"
-        data-testid="input-comment"
+          v-model:value="formValue.commentText"
+          :placeholder="t('comment_placeholder')"
+          data-testid="input-comment"
       />
     </n-form-item>
     <n-form-item class="form-button">
       <n-button :disabled="debounced" @click="sendComment" data-testid="button-comment-send">
         <template #icon>
           <n-icon>
-            <Send />
+            <Send/>
           </n-icon>
         </template>
       </n-button>
@@ -20,31 +20,24 @@
 </template>
 
 <script lang="ts" setup>
-import type { PresentationPeek } from 'src/api/types/entities'
-import { ref } from 'vue'
-import { type FormInst, useMessage } from 'naive-ui'
-import { useI18n } from 'vue-i18n'
-import { storeToRefs } from 'pinia'
-import { useUserSessionStore } from '@/stores/userSession'
-import { useAudienceStore } from '@/stores/audience'
+import type {PresentationPeek} from 'src/api/types/entities'
+import {ref} from 'vue'
+import {type FormInst, useMessage} from 'naive-ui'
+import {useI18n} from 'vue-i18n'
+import {useAudienceStore} from '@/stores/audience'
 import handleError from '@/lib/handleErrorInComponent'
-import { Send } from '@vicons/carbon'
+import {Send} from '@vicons/carbon'
 
-const props = defineProps({
-  presentation: { type: Object as () => PresentationPeek, required: false }
+defineProps({
+  presentation: {type: Object as () => PresentationPeek, required: false}
 })
 
 const message = useMessage()
 const debounced = ref(false)
-const { displayName } = storeToRefs(useUserSessionStore())
-const { t } = useI18n()
+const {t} = useI18n()
 const formRef = ref<FormInst | null>(null)
-const formValue = ref({ commentText: '' as string | null })
-const { comment } = useAudienceStore()
-
-function isJoined(): Boolean {
-  return !!props.presentation
-}
+const formValue = ref({commentText: '' as string | null})
+const {comment} = useAudienceStore()
 
 function sendComment(e: Event) {
   e.preventDefault()
@@ -67,9 +60,6 @@ function sendComment(e: Event) {
 </script>
 
 <style scoped>
-.n-form {
-  display: flex;
-}
 
 .form-input {
   flex: 1;

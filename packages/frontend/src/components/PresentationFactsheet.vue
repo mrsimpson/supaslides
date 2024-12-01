@@ -36,7 +36,7 @@
           :show="showEmbeddingCode"
           :style="{ width: '600px' }"
           preset="card"
-          @close="toggleEmebddingCodeShown"
+          @close="toggleEmbeddingCodeShown"
         >
           <template #header
             >Embed this into your sli.dev presentation "{{ presentation.title }}"
@@ -125,7 +125,7 @@
             v-if="showEmbedding"
             data-testid="button-embed"
             round
-            @click="toggleEmebddingCodeShown()"
+            @click="toggleEmbeddingCodeShown()"
           >
             <template #icon>
               <n-icon>
@@ -172,9 +172,7 @@ const props = defineProps({
     default: true
   }
 })
-
-const emit = defineEmits(['started'])
-
+defineEmits(['started']);
 const router = useRouter()
 const { t } = useI18n()
 const message = useMessage()
@@ -183,7 +181,7 @@ const toggleQrCodeShown = () => {
   showQrCode.value = !showQrCode.value
 }
 
-const toggleEmebddingCodeShown = () => {
+const toggleEmbeddingCodeShown = () => {
   showEmbeddingCode.value = !showEmbeddingCode.value
 }
 

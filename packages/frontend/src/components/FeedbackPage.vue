@@ -9,7 +9,7 @@ import type { Presentation } from 'src/api/types/entities'
 import type { PropType } from 'vue'
 import { NCard } from 'naive-ui'
 
-const props = defineProps({
+defineProps({
   presentation: { type: Object as PropType<Presentation>, required: true }
 })
 </script>
