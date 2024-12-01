@@ -20,6 +20,9 @@ concurrency:
   group: 'pages'
   cancel-in-progress: true
 
+env:
+  HUSKY: 0
+
 jobs:
   deploy:
     if: ${{ github.ref == 'refs/heads/main' && ((github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || github.event_name == 'workflow_dispatch') }}
