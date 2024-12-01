@@ -1,5 +1,5 @@
 <template>
-  <div :class="`event ${event.type}`" :style="style">
+  <div :class="`event`" :style="style">
     <component :is="getEventComponent(event.type)" :event="parsed(event)" :isMine="isMine"/>
     <span :class="{creationInfo: true, mobile: isNarrowScreen}">
       <span v-if="event.created_by_alias">{{ event.created_by_alias }}, </span>
