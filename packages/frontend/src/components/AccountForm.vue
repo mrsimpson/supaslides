@@ -111,9 +111,8 @@ async function getProfile() {
   }
 }
 
-async function changeProfile(e: Event) {
-  const valid = await formRef.value?.validate()
-
+async function changeProfile() {
+  await formRef.value?.validate();
   try {
     if (session && session.user) {
       loading.value = true
@@ -149,7 +148,7 @@ async function logOut() {
 
     await signOut()
 
-    router.push('/')
+    await router.push('/')
   } catch (error) {
     if (error instanceof Error) {
       alert(error.message)

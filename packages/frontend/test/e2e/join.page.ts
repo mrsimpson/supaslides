@@ -1,5 +1,5 @@
 import { BasePage } from './base-page.js'
-import { expect, Locator, Page } from '@playwright/test'
+import { Locator, Page } from '@playwright/test'
 
 export class JoinPage extends BasePage {
   readonly displayName: Locator

@@ -30,18 +30,16 @@ import type {Presentation} from 'src/api/types/entities'
 import BroadcastForm from '@/components/BroadcastForm.vue'
 import router from '@/router'
 
-const {isSignedIn, anonUuid, session} = storeToRefs(useUserSessionStore())
+const {anonUuid, session} = storeToRefs(useUserSessionStore())
 
 let presenterStore = usePresenterStore()
-const {currentPresentation, myPresentations, isInitialized, myPresentationEvents} =
+const {myPresentations, myPresentationEvents} =
     storeToRefs(presenterStore)
 
 const {currentRoute} = useRouter()
 
-const presentationId = () => parseInt(<string>currentRoute.value.params.presentationId)
-
-const isPresentationCurrentOne = () => {
-  return currentPresentation.value?.id && presentationId() === currentPresentation?.value.id
+function presentationId() {
+  return parseInt(currentRoute.value.params.presentationId as string)
 }
 
 let presentation = ref<Presentation | null>()

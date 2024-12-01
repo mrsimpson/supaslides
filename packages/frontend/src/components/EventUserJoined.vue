@@ -23,7 +23,6 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
-const event = ref(props.event)
 
 let displayName = ref<string | undefined>(undefined)
 

@@ -57,7 +57,7 @@ const { displayName } = storeToRefs(useUserSessionStore())
 const { setDisplayName } = useUserSessionStore()
 
 const isEditMode = ref(false)
-const theme = useThemeVars()
+useThemeVars()
 
 onMounted(async () => {
   if (!displayName.value) {

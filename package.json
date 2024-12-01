@@ -9,7 +9,9 @@
   "scripts": {
     "build": "npm run build --workspace=packages/backend --workspace=packages/frontend",
     "lint": "npm run lint --workspace=packages/frontend",
-    "test": "npm run test --run --workspace=packages/backend && npm run test:e2e --workspace=packages/frontend"
+    "lint:fix": "npm run lint:fix --workspace=packages/frontend",
+    "test": "npm run test --run --workspace=packages/backend && npm run test:e2e --workspace=packages/frontend",
+    "prepare": "husky"
   },
   "author": "mrsimpson",
   "license": "ISC",
@@ -18,6 +20,7 @@
     "packages/frontend"
   ],
   "devDependencies": {
+    "husky": "9.1.7",
     "sass": "1.81.0"
   }
 }

@@ -13,7 +13,6 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 import type { SpecificPresentationEvent } from 'src/api/types/entities.js'
 import AvatarIcon from '@/components/AvatarIcon.vue'
 import SpeechBubble from '@/components/SpeechBubble.vue'
@@ -31,6 +30,5 @@ onMounted(async () => {
   displayName.value = await getAuthorDisplayName(props.event)
 })
 
-const { t } = useI18n()
 const event = ref(props.event)
 </script>
