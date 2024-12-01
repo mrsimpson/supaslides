@@ -11,7 +11,7 @@
     "lint": "npm run lint --workspace=packages/frontend",
     "lint:fix": "npm run lint:fix --workspace=packages/frontend",
     "test": "npm run test --run --workspace=packages/backend && npm run test:e2e --workspace=packages/frontend",
-    "prepare": "husky"
+    "prepare": "node .husky/install.mjs"
   },
   "author": "mrsimpson",
   "license": "ISC",
