@@ -71,6 +71,7 @@ hr {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: -webkit-fill-available;
   margin: 0;
   width: 100%;
 }

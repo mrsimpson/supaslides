@@ -1,5 +1,5 @@
 <template>
-  <n-form ref="formRef" :model="formValue" inline @submit="sendComment">
+  <n-form ref="formRef" :model="formValue" inline size="large" @submit="sendComment">
     <n-form-item class="form-input" path="commentText">
       <n-input
           v-model:value="formValue.commentText"
