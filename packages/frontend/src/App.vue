@@ -3,19 +3,19 @@
     <n-theme-editor :style="themeEditorStyle">
       <n-layout :has-sider="isSignedIn">
         <n-layout-sider
-          v-if="isSignedIn"
-          :collapsed="menuCollapsed"
-          :collapsed-width="64"
-          :onUpdate:collapsed="handleSiderUpdate"
-          collapse-mode="width"
-          show-trigger
+            v-if="isSignedIn"
+            :collapsed="menuCollapsed"
+            :collapsed-width="64"
+            :onUpdate:collapsed="handleSiderUpdate"
+            collapse-mode="width"
+            show-trigger
         >
-          <TheNavigation />
+          <TheNavigation/>
         </n-layout-sider>
         <n-layout-content>
           <n-message-provider>
             <n-space vertical>
-              <RouterView />
+              <RouterView/>
             </n-space>
           </n-message-provider>
         </n-layout-content>
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import {ref} from 'vue'
 import {
   darkTheme,
   type GlobalTheme,
@@ -39,8 +39,8 @@ import {
   useOsTheme
 } from 'naive-ui'
 import TheNavigation from '@/components/TheNavigation.vue'
-import { useUserSessionStore } from '@/stores/userSession'
-import { storeToRefs } from 'pinia'
+import {useUserSessionStore} from '@/stores/userSession'
+import {storeToRefs} from 'pinia'
 
 const osThemeRef = useOsTheme()
 const theme = ref((osThemeRef.value === 'dark' ? darkTheme : null) as GlobalTheme | null)
@@ -61,24 +61,12 @@ const themeOverrides: GlobalThemeOverrides = {
   //   }
 }
 
-const themeEditorStyle = localStorage.getItem('theme') === 'true' ? {} : { display: 'none' }
+const themeEditorStyle = localStorage.getItem('theme') === 'true' ? {} : {display: 'none'}
 
 useUserSessionStore().initialize()
-const { menuCollapsed, isSignedIn } = storeToRefs(useUserSessionStore())
+const {menuCollapsed, isSignedIn} = storeToRefs(useUserSessionStore())
 
 function handleSiderUpdate(isCollapsed: boolean) {
   menuCollapsed.value = isCollapsed
 }
 </script>
-
-<!-- Global styles -->
-<style>
-a:hover {
-  background-color: unset;
-}
-
-p {
-  margin-block-end: 0.5rem;
-  margin-block-start: 0.5rem;
-}
-</style>
