@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "2.43.4",
-    "dotenv": "16.4.5"
+    "dotenv": "16.4.7"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",
