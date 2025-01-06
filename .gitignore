@@ -27,5 +27,8 @@ coverage
 *.sln
 *.sw?
 
+# Turbo
+.turbo
+
 # the env file – use .env.local
 .env

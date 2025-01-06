@@ -6,21 +6,26 @@
     "slidev",
     "presentations"
   ],
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "build": "npm run build --workspace=packages/backend --workspace=packages/frontend",
-    "lint": "npm run lint --workspace=packages/frontend",
-    "lint:fix": "npm run lint:fix --workspace=packages/frontend",
-    "test": "npm run test --run --workspace=packages/backend && npm run test:e2e --workspace=packages/frontend",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean && rm -rf node_modules",
     "prepare": "node .husky/install.mjs"
   },
   "author": "mrsimpson",
   "license": "ISC",
-  "workspaces": [
-    "packages/backend",
-    "packages/frontend"
-  ],
   "devDependencies": {
     "husky": "9.1.7",
-    "sass": "1.81.0"
+    "sass": "1.81.0",
+    "turbo": "^1.11.3"
   }
 }

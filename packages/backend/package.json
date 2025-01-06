@@ -7,6 +7,7 @@
     "dist"
   ],
   "scripts": {
+    "dev": "supabase start -x storage-api,imgproxy,inbucket,pgadmin-schema-diff,migra,postgres-meta,studio,edge-runtime,logflare,pg_prov,pgbouncer",
     "build": "tsc",
     "test": "vitest",
     "type-check": "tsc --build --force"
