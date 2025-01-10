@@ -17,8 +17,8 @@
     "dotenv": "16.4.7"
   },
   "devDependencies": {
-    "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^20.12.5",
-    "@vue/tsconfig": "^0.5.1"
+    "@tsconfig/node20": "20.1.4",
+    "@types/node": "20.17.12",
+    "@vue/tsconfig": "0.5.1"
   }
 }

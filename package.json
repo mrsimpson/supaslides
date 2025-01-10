@@ -26,6 +26,6 @@
   "devDependencies": {
     "husky": "9.1.7",
     "sass": "1.81.0",
-    "turbo": "^1.11.3"
+    "turbo": "1.13.4"
   }
 }
