@@ -39,7 +39,7 @@
     "@vue/tsconfig": "0.5.1",
     "eslint": "8.57.0",
     "eslint-plugin-playwright": "1.6.2",
-    "eslint-plugin-vue": "9.27.0",
+    "eslint-plugin-vue": "10.0.0",
     "jsdom": "24.1.1",
     "naive-ui": "2.38.2",
     "npm-run-all2": "6.2.2",
