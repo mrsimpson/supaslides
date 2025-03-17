@@ -20,7 +20,7 @@
     "@tsconfig/node20": "20.1.4",
     "@types/node": "20.17.12",
     "@vue/tsconfig": "0.5.1",
-    "vitest": "1.6.0"
+    "vitest": "3.0.9"
   },
   "description": "Backend for Supaslides, providing also type defitions for the APIs",
   "main": "index.js",
