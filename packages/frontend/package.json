@@ -16,7 +16,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@supabase/supabase-js": "2.43.4",
+    "@supabase/supabase-js": "2.49.1",
     "@vueuse/core": "10.10.0",
     "dotenv": "16.4.7",
     "node-emoji": "2.1.3",
