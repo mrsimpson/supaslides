@@ -53,10 +53,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20.20.2
           cache: npm
 
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@v1.7.1
         with:
           version: latest
 
@@ -94,10 +94,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20.20.2
           cache: npm
 
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@v1.7.1
         with:
           version: latest
 
